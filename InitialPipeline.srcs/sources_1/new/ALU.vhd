@@ -24,15 +24,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_SIGNED.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity alu is
     Port(
         a, b    : in    STD_LOGIC_VECTOR(15 DOWNTO 0);
@@ -47,7 +38,7 @@ end alu;
 architecture Behavioral of alu is
 begin  
     process (f, a, b, cl, clk)
-    variable foo    :  STD_LOGIC_VECTOR(15 DOWNTO 0);
+    variable foo    :  STD_LOGIC_VECTOR(15 DOWNTO 0) := (others => '0');
     begin
         if(clk'event and clk='1') then
             result <= (others => '0');
@@ -61,7 +52,7 @@ begin
                     result <= a - b;  -- sub
                     -- TODO: ADD OVERFLOW
                 when "011" => 
-                    -- mul
+                    result <= a * b; -- mul
                     -- TODO: ADD OVERFLOW
                 when "100" => 
                     result <= a NAND b;  -- nand
@@ -71,7 +62,6 @@ begin
                     result <= std_logic_vector(shift_right(unsigned(a), to_integer(unsigned(cl)))); -- shr
                 when others =>  -- test
                     -- test for zero                    
-                    foo := (others => '0');
                     if(a = foo) then
                         zero <= '1';
                     else
