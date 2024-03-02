@@ -1,18 +1,22 @@
 
+-- Authors - ECE449 Lab Team, additions by Jensen Gillett
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 entity register_file is
-port(rst : in std_logic; clk: in std_logic;
---read signals
-rd_index1: in std_logic_vector(2 downto 0); 
-rd_index2: in std_logic_vector(2 downto 0); 
-rd_data1: out std_logic_vector(15 downto 0); 
-rd_data2: out std_logic_vector(15 downto 0);
---write signals
-wr_index: in std_logic_vector(2 downto 0); 
-wr_data: in std_logic_vector(15 downto 0); wr_enable: in std_logic);
+    port(
+        rst : in std_logic; clk: in std_logic;
+        --read signals
+        rd_index1: in std_logic_vector(2 downto 0); 
+        rd_index2: in std_logic_vector(2 downto 0); 
+        rd_data1: out std_logic_vector(15 downto 0); 
+        rd_data2: out std_logic_vector(15 downto 0);
+        --write signals
+        wr_index: in std_logic_vector(2 downto 0); 
+        wr_data: in std_logic_vector(15 downto 0); wr_enable: in std_logic
+    );
 end register_file;
 
 architecture behavioural of register_file is
