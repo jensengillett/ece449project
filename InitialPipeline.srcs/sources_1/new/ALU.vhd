@@ -15,7 +15,8 @@ entity alu is
         clk     : in    STD_LOGIC;
         negative, zero, overflow : out   STD_LOGIC;
         result  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
-        extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0)
+        extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        alu_enable: in  STD_LOGIC
     );
 end alu;
 
@@ -28,7 +29,7 @@ architecture Behavioral of alu is begin
     variable result_32 : signed(31 DOWNTO 0) := (others => '0');  -- Used for MUL results
     variable temp_a, temp_b : signed(15 DOWNTO 0) := (others => '0');  -- Used for MUL operands
     begin -- Begin process
-        if(clk'event and clk='1') then  -- On each clock tick
+        if(clk'event and clk='1' and alu_enable = '1') then  -- On each clock tick
             result <= (others => '0'); -- reset result signal
             extra_16_bits <= (others => '0');  -- reset MUL extra bits
             negative <= '0'; zero <= '0'; overflow <= '0';  -- reset flags

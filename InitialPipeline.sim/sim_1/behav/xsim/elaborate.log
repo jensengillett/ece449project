@@ -1,9 +1,12 @@
 Vivado Simulator v2023.2
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: C:/Xilinx/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot control_path_behav xil_defaultlib.control_path -log elaborate.log 
+Running: C:/Xilinx/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot preliminary_design_review_behav xil_defaultlib.preliminary_design_review -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
+WARNING: [VRFC 10-8856] comparison between unequal length arrays always returns FALSE; left argument length 7 is different from right argument length 4 for 'std_logic_vector_93' array [C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/decoder.vhd:48]
+WARNING: [VRFC 10-8856] comparison between unequal length arrays always returns FALSE; left argument length 7 is different from right argument length 8 for 'std_logic_vector_93' array [C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/decoder.vhd:75]
+WARNING: [VRFC 10-8856] comparison between unequal length arrays always returns FALSE; left argument length 7 is different from right argument length 8 for 'std_logic_vector_93' array [C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/decoder.vhd:87]
 Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis
@@ -12,5 +15,12 @@ Compiling package std.standard
 Compiling package std.textio
 Compiling package ieee.std_logic_1164
 Compiling package ieee.numeric_std
-Compiling architecture behavioral of entity xil_defaultlib.control_path
-Built simulation snapshot control_path_behav
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_signed
+Compiling package ieee.std_logic_unsigned
+Compiling architecture behavioral of entity xil_defaultlib.alu [alu_default]
+Compiling architecture behavioural of entity xil_defaultlib.register_file [register_file_default]
+Compiling architecture behavioral of entity xil_defaultlib.decoder [decoder_default]
+Compiling architecture behavioral of entity xil_defaultlib.simple_control_path [simple_control_path_default]
+Compiling architecture behavioral of entity xil_defaultlib.preliminary_design_review
+Built simulation snapshot preliminary_design_review_behav

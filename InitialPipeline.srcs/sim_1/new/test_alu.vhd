@@ -21,7 +21,8 @@ component alu port(
     f       : in    STD_LOGIC_VECTOR(2 DOWNTO 0);
     clk     : in    STD_LOGIC;
     negative, zero, overflow : out   STD_LOGIC;
-    result, extra_16_bits  : out   STD_LOGIC_VECTOR(15 DOWNTO 0)
+    result, extra_16_bits  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
+    alu_enable : in STD_LOGIC
 );
 end component;
 
@@ -32,6 +33,7 @@ signal f       : STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal clk     : STD_LOGIC;
 signal negative, zero, overflow : STD_LOGIC;
 signal result, extra_16_bits  : STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal alu_enable : STD_LOGIC;
 
 begin
     -- Port map the internal signals to the ALU.
@@ -45,7 +47,9 @@ begin
         zero => zero, 
         overflow => overflow, 
         result => result, 
-        extra_16_bits => extra_16_bits);
+        extra_16_bits => extra_16_bits,
+        alu_enable => alu_enable
+    );
     
     -- Clock process. This just clocks the ALU automatically every 10us.
     process begin
@@ -57,6 +61,8 @@ begin
     process begin
         -- Clear signals.
         a <= (others => '0'); b <= (others => '0'); cl <= "0000"; f <= "000";
+        -- Enable ALU
+        alu_enable <= '1';
         -- Add some delay before starting.
         wait until (clk = '0' and clk'event); wait until (clk='1' and clk'event); wait until (clk='1' and clk'event);
         wait until (clk = '1' and clk'event); 
