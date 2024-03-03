@@ -9,21 +9,13 @@ entity simple_control_path is
     Port ( 
         clk : in STD_LOGIC;
         control_reset : in STD_LOGIC;
-        control_state : out STD_LOGIC_VECTOR(3 DOWNTO 0);
-        pc : inout STD_LOGIC_VECTOR(15 DOWNTO 0)
+        control_state : out STD_LOGIC_VECTOR(3 DOWNTO 0)
     );
 end simple_control_path;
 
 architecture Behavioral of simple_control_path is
 signal current_state : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0001";
 begin
-    -- Update the program counter by a word (2 bytes)
-    -- TODO: Branch support.
-    process begin
-        wait until (clk='1' and clk'event);
-        pc <= std_logic_vector(unsigned(pc) + 2);
-    end process;
-    
     process(clk) begin
         if(rising_edge(clk)) then
             if(control_reset = '1') then

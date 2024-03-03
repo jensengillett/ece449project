@@ -1,2 +1,2 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/control_path_v2.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'simple_control_path'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/preliminary_design_review.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'preliminary_design_review'

@@ -80,14 +80,24 @@ signal decode_cl_value: STD_LOGIC_VECTOR(3 DOWNTO 0);
 component simple_control_path Port ( 
         clk : in STD_LOGIC;
         control_reset : in STD_LOGIC;
-        control_state : out STD_LOGIC_VECTOR(3 DOWNTO 0);
-        pc : inout STD_LOGIC_VECTOR(15 DOWNTO 0)
+        control_state : out STD_LOGIC_VECTOR(3 DOWNTO 0)
     );
 end component;
 
 signal control_reset: STD_LOGIC;
 signal control_state: STD_LOGIC_VECTOR(3 DOWNTO 0);
-signal pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
+
+component pc_unit Port (
+        clk: in STD_LOGIC;
+        in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_pc_reset: in STD_LOGIC;
+        in_pc_assign: in STD_LOGIC;
+        out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0)
+     );
+end component;
+
+signal in_pc, pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal in_pc_reset, in_pc_assign: STD_LOGIC;
 
 -- Enable lines
 signal en_decode: STD_LOGIC := '0';
@@ -144,8 +154,15 @@ begin
     u_control: simple_control_path port map(
         clk => clk,
         control_reset => control_reset,
-        control_state => control_state,
-        pc => pc
+        control_state => control_state
+    );
+    
+    u_pc: pc_unit port map(
+        clk => clk,
+        in_pc => in_pc,
+        in_pc_reset => in_pc_reset,
+        in_pc_assign => in_pc_assign,
+        out_pc => pc
     );
     
     en_decode <= control_state(0);
@@ -181,7 +198,6 @@ begin
     
     process(clk) begin
         if(rising_edge(clk) and is_startup = '1') then
-            pc <= X"0000";
             is_startup <= '0';
         end if;
     end process;
@@ -191,59 +207,57 @@ begin
         wait until (pc'event);
         case pc is
             -- For some reason there's an offset set at the start of the assembly file that makes it not have data until 0x0216.
-            -- This was replicated here just in case it was important.
-            when X"0216" =>
+            -- This was not replicated here.
+            when X"0010" =>
                 loaded_value <= X"4240";
                 decode_in_port <= X"0003";
                 reg_wr_data <= decode_in_write_data;
-            when X"0218" =>
+            when X"0012" =>
                 loaded_value <= X"4280";
                 decode_in_port <= X"0005";
                 reg_wr_data <= decode_in_write_data;
-            when X"021A" =>
+            when X"0014" =>
                 loaded_value <= X"0000";
-            when X"021C" =>
+            when X"0016" =>
                 loaded_value <= X"0000";
-            when X"021E" => 
+            when X"0018" => 
                 loaded_value <= X"0000";
-            when X"0220" =>
+            when X"001A" =>
                 loaded_value <= X"0000";
-            when X"0222" =>
+            when X"001C" =>
                 loaded_value <= X"02D1";
-            when X"0224" =>
+            when X"001E" =>
                 loaded_value <= X"0000";
-            when X"0226" =>
+            when X"0020" =>
                 loaded_value <= X"0000";
-            when X"0228" =>
+            when X"0022" =>
                 loaded_value <= X"0000";
-            when X"022A" =>
+            when X"0024" =>
                 loaded_value <= X"0000";
-            when X"022C" =>
+            when X"0026" =>
                 loaded_value <= X"0AC2";
-            when X"022E" =>
+            when X"0028" =>
                 loaded_value <= X"0000";
-            when X"0230" =>
+            when X"002A" =>
                 loaded_value <= X"0000";
-            when X"0232" =>
+            when X"002C" =>
                 loaded_value <= X"0000";
-            when X"0234" =>
+            when X"002E" =>
                 loaded_value <= X"0000";
-            when X"0236" =>
+            when X"0030" =>
                 loaded_value <= X"068B";
-            when X"0238" =>
+            when X"0032" =>
                 loaded_value <= X"0000";
-            when X"023A" =>
+            when X"0034" =>
                 loaded_value <= X"0000";
-            when X"023C" =>
+            when X"0036" =>
                 loaded_value <= X"0000";
-            when X"023E" =>
+            when X"0038" =>
                 loaded_value <= X"0000";
-            when X"0240" =>
+            when X"003A" =>
                 loaded_value <= X"4080";
-            when X"0242" =>
+            when X"003C" =>
                 loaded_value <= X"0000";
-            when X"FFFF" =>
-                pc <= X"0000";
             when others =>
                 loaded_value <= X"0000";
         end case;

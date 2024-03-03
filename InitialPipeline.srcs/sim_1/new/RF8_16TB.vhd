@@ -7,17 +7,17 @@ use work.all;
 entity test_reg_file is end test_reg_file;
 
 architecture behavioural of test_reg_file is
-component register_file port(rst : in std_logic; clk: in std_logic; 
+component register_file port(rst : in std_logic; clk: in std_logic; reg_enable: in std_logic;
 rd_index1, rd_index2: in std_logic_vector(2 downto 0);
 rd_data1, rd_data2: out std_logic_vector(15 downto 0); 
 wr_index: in std_logic_vector(2 downto 0); 
 wr_data: in std_logic_vector(15 downto 0); wr_enable: in std_logic);
 end component; 
-signal rst, clk, wr_enable : std_logic; 
+signal rst, clk, wr_enable, reg_enable : std_logic; 
 signal rd_index1, rd_index2, wr_index : std_logic_vector(2 downto 0); 
 signal rd_data1, rd_data2, wr_data : std_logic_vector(15 downto 0); 
 begin
-u0:register_file port map(rst, clk, rd_index1, rd_index2, rd_data1, rd_data2, wr_index, wr_data, wr_enable);
+u0:register_file port map(rst, clk, reg_enable, rd_index1, rd_index2, rd_data1, rd_data2, wr_index, wr_data, wr_enable);
 process begin
 clk <= '0'; wait for 10 us;
 clk<='1'; wait for 10 us; 
@@ -25,6 +25,7 @@ end process;
 process  begin
 rst <= '1'; rd_index1 <= "000"; rd_index2 <= "000"; wr_enable <= '0'; wr_index <= "000";
 wr_data <= X"0000";
+
 wait until (clk='0' and clk'event); wait until (clk='1' and clk'event); wait until (clk='1' and clk'event);
 rst <= '0';
 wait until (clk='1' and clk'event); wr_enable <= '1'; wr_data <= X"200a";
