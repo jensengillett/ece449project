@@ -46,13 +46,15 @@ component register_file port(
         wr_data: in std_logic_vector(15 downto 0); 
         wr_enable: in std_logic;
         out_enable: in std_logic;
-        out_port: out std_logic_vector(15 downto 0)
+        out_port: out std_logic_vector(15 downto 0);
+        in_enable: in std_logic;
+        in_port: in std_logic_vector(15 downto 0)
     );
 end component;
 
-signal reg_rst, reg_wr_enable, reg_out_enable: STD_LOGIC;
+signal reg_rst, reg_wr_enable, reg_out_enable, reg_in_enable: STD_LOGIC;
 signal reg_rd_index1, reg_rd_index2, reg_wr_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
-signal reg_rd_data1, reg_rd_data2, reg_wr_data, reg_out_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal reg_rd_data1, reg_rd_data2, reg_wr_data, reg_out_port, reg_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 component decoder Port ( 
         clk: in STD_LOGIC;
@@ -92,12 +94,13 @@ component pc_unit Port (
         in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_pc_reset: in STD_LOGIC;
         in_pc_assign: in STD_LOGIC;
-        out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0)
+        out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_pc_enable: in STD_LOGIC
      );
 end component;
 
 signal in_pc, pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
-signal in_pc_reset, in_pc_assign: STD_LOGIC;
+signal in_pc_reset, in_pc_assign, in_pc_enable: STD_LOGIC;
 
 -- Enable lines
 signal en_decode: STD_LOGIC := '0';
@@ -127,11 +130,15 @@ begin
         reg_enable => en_regread or en_regwrite,
         rd_index1 => reg_rd_index1,
         rd_index2 => reg_rd_index2,
+        rd_data1 => reg_rd_data1,
+        rd_data2 => reg_rd_data2,
         wr_index => reg_wr_index,
         wr_data => reg_wr_data,
         wr_enable => reg_wr_enable and en_regwrite,
         out_enable => reg_out_enable,
-        out_port => reg_out_port
+        out_port => reg_out_port,
+        in_enable => reg_in_enable,
+        in_port => reg_in_port
     );
     
     u_decode: decoder port map(
@@ -162,13 +169,15 @@ begin
         in_pc => in_pc,
         in_pc_reset => in_pc_reset,
         in_pc_assign => in_pc_assign,
-        out_pc => pc
+        out_pc => pc,
+        in_pc_enable => in_pc_enable
     );
     
     en_decode <= control_state(0);
     en_regread <= control_state(1);
     en_alu <= control_state(2);
     en_regwrite <= control_state(3);
+    in_pc_enable <= control_state(3);
     
     -- Instruction Fetch
     decode_instruction <= loaded_value;
@@ -198,6 +207,7 @@ begin
     
     process(clk) begin
         if(rising_edge(clk) and is_startup = '1') then
+            -- clear startup flag
             is_startup <= '0';
         end if;
     end process;
@@ -208,16 +218,23 @@ begin
         case pc is
             -- For some reason there's an offset set at the start of the assembly file that makes it not have data until 0x0216.
             -- This was not replicated here.
+            when X"0000" =>   -- Initial state setup. Not part of the ASM file.
+                reg_rst <= '1';
+                reg_in_enable <= '0';
+                reg_in_port <= X"0000";
+            when X"0002" => 
+                reg_rst <= '0';
             when X"0010" =>
                 loaded_value <= X"4240";
-                decode_in_port <= X"0003";
-                reg_wr_data <= decode_in_write_data;
+                reg_in_enable <= '1';
+                reg_in_port <= X"0003";
             when X"0012" =>
                 loaded_value <= X"4280";
-                decode_in_port <= X"0005";
-                reg_wr_data <= decode_in_write_data;
+                reg_in_enable <= '1';
+                reg_in_port <= X"0005";
             when X"0014" =>
                 loaded_value <= X"0000";
+                reg_in_enable <= '0';
             when X"0016" =>
                 loaded_value <= X"0000";
             when X"0018" => 

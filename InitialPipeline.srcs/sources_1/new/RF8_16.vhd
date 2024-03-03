@@ -18,7 +18,9 @@ entity register_file is
         wr_data: in std_logic_vector(15 downto 0); 
         wr_enable: in std_logic;
         out_enable: in std_logic;
-        out_port: out std_logic_vector(15 downto 0)
+        out_port: out std_logic_vector(15 downto 0);
+        in_enable: in std_logic;
+        in_port: in std_logic_vector(15 downto 0)
     );
 end register_file;
 
@@ -35,7 +37,20 @@ begin
           for i in 0 to 7 loop
              reg_file(i)<= (others => '0'); 
           end loop;
-       elsif(wr_enable='1') then
+       -- TEMPORARY: This handles the input port properly.
+       elsif(in_enable='1' and wr_enable='1' and reg_enable = '1') then
+        case wr_index(2 downto 0) is
+            when "000" => reg_file(0) <= in_port;
+            when "001" => reg_file(1) <= in_port;
+            when "010" => reg_file(2) <= in_port;
+            when "011" => reg_file(3) <= in_port;
+            when "100" => reg_file(4) <= in_port;
+            when "101" => reg_file(5) <= in_port;
+            when "110" => reg_file(6) <= in_port;
+            when "111" => reg_file(7) <= in_port;
+            when others => NULL; end case;
+        end if; 
+       elsif(wr_enable='1' and reg_enable = '1') then
           case wr_index(2 downto 0) is
             when "000" => reg_file(0) <= wr_data;
             when "001" => reg_file(1) <= wr_data;
@@ -46,7 +61,6 @@ begin
             when "110" => reg_file(6) <= wr_data;
             when "111" => reg_file(7) <= wr_data;
             when others => NULL; end case;
-        end if; 
         end if;
     end process;
 

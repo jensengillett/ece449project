@@ -21,7 +21,9 @@ entity alu is
 end alu;
 
 -- Start architecture definition.
-architecture Behavioral of alu is begin  
+architecture Behavioral of alu is 
+
+begin 
     process (f, a, b, cl, clk)  -- define local inputs
     -- Set up some internal variables used for different operations.
     variable foo    :  STD_LOGIC_VECTOR(14 DOWNTO 0) := (others => '0');  -- 15-bit, all zeros (for testing against zero)

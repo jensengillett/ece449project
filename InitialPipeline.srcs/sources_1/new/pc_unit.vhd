@@ -11,7 +11,8 @@ entity pc_unit is
         in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_pc_reset: in STD_LOGIC := '0';
         in_pc_assign: in STD_LOGIC := '0';
-        out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0)
+        out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_pc_enable: in STD_LOGIC
      );
 end pc_unit;
 
@@ -20,7 +21,7 @@ signal current_pc: STD_LOGIC_VECTOR(15 DOWNTO 0) := X"0000";
 begin
 
 process(clk) begin
-    if(rising_edge(clk)) then
+    if(rising_edge(clk) and in_pc_enable = '1') then
         if (in_pc_reset = '1') then
             current_pc <= X"0000";
         elsif (in_pc_assign = '1') then
