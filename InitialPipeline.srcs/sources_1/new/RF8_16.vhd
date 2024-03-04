@@ -7,7 +7,9 @@ use ieee.std_logic_unsigned.all;
 
 entity register_file is
     port(
-        rst : in std_logic; clk: in std_logic; reg_enable: in std_logic;
+        rst : in std_logic; 
+        clk: in std_logic; 
+        reg_enable: in std_logic;
         --read signals
         rd_index1: in std_logic_vector(2 downto 0); 
         rd_index2: in std_logic_vector(2 downto 0); 
@@ -37,6 +39,7 @@ begin
           for i in 0 to 7 loop
              reg_file(i)<= (others => '0'); 
           end loop;
+          end if;
        -- TEMPORARY: This handles the input port properly.
        elsif(in_enable='1' and wr_enable='1' and reg_enable = '1') then
         case wr_index(2 downto 0) is
@@ -49,7 +52,6 @@ begin
             when "110" => reg_file(6) <= in_port;
             when "111" => reg_file(7) <= in_port;
             when others => NULL; end case;
-        end if; 
        elsif(wr_enable='1' and reg_enable = '1') then
           case wr_index(2 downto 0) is
             when "000" => reg_file(0) <= wr_data;
@@ -63,25 +65,46 @@ begin
             when others => NULL; end case;
         end if;
     end process;
+    
+    -- Output port
+    process(clk) begin
+        if(out_enable = '1' and reg_enable = '1') then
+            case rd_index1(2 downto 0) is
+                when "000" => out_port <= reg_file(0);
+                when "001" => out_port <= reg_file(1);
+                when "010" => out_port <= reg_file(2);
+                when "011" => out_port <= reg_file(3);
+                when "100" => out_port <= reg_file(4);
+                when "101" => out_port <= reg_file(5);
+                when "110" => out_port <= reg_file(6);
+                when "111" => out_port <= reg_file(7);
+                when others => NULL; 
+            end case;
+        end if;
+    end process;
 
     --read operation
-    -- I can't find an easy way to disable the read operation for the register file...
-    rd_data1 <=	
-    reg_file(0) when(rd_index1="000") else
-    reg_file(1) when(rd_index1="001") else
-    reg_file(2) when(rd_index1="010") else
-    reg_file(3) when(rd_index1="011") else
-    reg_file(4) when(rd_index1="100") else
-    reg_file(5) when(rd_index1="101") else
-    reg_file(6) when(rd_index1="110") else reg_file(7);
+    process(clk) begin
+        if(reg_enable = '1' and out_enable = '0') then
+            rd_data1 <=	
+            reg_file(0) when(rd_index1="000") else
+            reg_file(1) when(rd_index1="001") else
+            reg_file(2) when(rd_index1="010") else
+            reg_file(3) when(rd_index1="011") else
+            reg_file(4) when(rd_index1="100") else
+            reg_file(5) when(rd_index1="101") else
+            reg_file(6) when(rd_index1="110") else reg_file(7);
+            
+            rd_data2 <=
+            reg_file(0) when(rd_index2="000") else
+            reg_file(1) when(rd_index2="001") else
+            reg_file(2) when(rd_index2="010") else
+            reg_file(3) when(rd_index2="011") else
+            reg_file(4) when(rd_index2="100") else
+            reg_file(5) when(rd_index2="101") else
+            reg_file(6) when(rd_index2="110") else reg_file(7);
+        end if;
+    end process;
     
-    rd_data2 <=
-    reg_file(0) when(rd_index2="000") else
-    reg_file(1) when(rd_index2="001") else
-    reg_file(2) when(rd_index2="010") else
-    reg_file(3) when(rd_index2="011") else
-    reg_file(4) when(rd_index2="100") else
-    reg_file(5) when(rd_index2="101") else
-    reg_file(6) when(rd_index2="110") else reg_file(7);
-
+    
 end behavioural;

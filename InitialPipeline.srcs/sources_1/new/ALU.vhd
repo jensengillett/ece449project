@@ -101,6 +101,8 @@ begin
                 when "101" =>  -- SHL (Shift Left)
                     -- Both SHL and SHR use the built-in NUMERIC_STD operators, but they require type conversion of a and cl to unsigned and integer, respectively.
                     result <= std_logic_vector(shift_left(unsigned(a), to_integer(unsigned(cl))));
+                    -- TODO: Because this operator (and SHR) write the output to the same register as the input, for one cycle the input becomes the output value.
+                    -- This does not affect the correctness of the code; it is an issue with the 'fake concurrency' method we're using to pipeline.
                 when "110" =>  -- SHR (Shift Right)
                     result <= std_logic_vector(shift_right(unsigned(a), to_integer(unsigned(cl))));
                 when others =>  -- TEST
