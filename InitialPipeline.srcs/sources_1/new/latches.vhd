@@ -63,11 +63,11 @@ begin
         if(rising_edge(clk)) then
             id_out_rd_data_1 <= id_in_rd_data_1;
             id_out_rd_data_2 <= id_in_rd_data_2;
-        elsif(falling_edge(clk)) then
             id_out_alu_op <= id_in_alu_op;
+            id_out_cl_value <= id_in_cl_value;
+        elsif(falling_edge(clk)) then
             id_out_mem_op <= id_in_mem_op;
             id_out_wb_op <= id_in_wb_op;
-            id_out_cl_value <= id_in_cl_value;
             id_out_wb_register <= id_in_wb_register;
         end if;
     end process;
