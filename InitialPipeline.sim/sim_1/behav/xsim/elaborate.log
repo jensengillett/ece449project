@@ -1,7 +1,7 @@
-Vivado Simulator v2023.2
+Vivado Simulator v2023.2.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: C:/Xilinx/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot preliminary_design_review_behav xil_defaultlib.preliminary_design_review -log elaborate.log 
+Running: C:/Xilinx/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot test_format_a_behav xil_defaultlib.test_format_a -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Completed static elaboration
@@ -18,7 +18,11 @@ Compiling package ieee.std_logic_unsigned
 Compiling architecture behavioral of entity xil_defaultlib.alu [alu_default]
 Compiling architecture behavioural of entity xil_defaultlib.register_file [register_file_default]
 Compiling architecture behavioral of entity xil_defaultlib.decoder [decoder_default]
-Compiling architecture behavioral of entity xil_defaultlib.simple_control_path [simple_control_path_default]
 Compiling architecture behavioral of entity xil_defaultlib.pc_unit [pc_unit_default]
-Compiling architecture behavioral of entity xil_defaultlib.preliminary_design_review
-Built simulation snapshot preliminary_design_review_behav
+Compiling architecture behavioral of entity xil_defaultlib.if_id_latch [if_id_latch_default]
+Compiling architecture behavioral of entity xil_defaultlib.id_ex_latch [id_ex_latch_default]
+Compiling architecture behavioral of entity xil_defaultlib.ex_mem_latch [ex_mem_latch_default]
+Compiling architecture behavioral of entity xil_defaultlib.mem_wb_latch [mem_wb_latch_default]
+Compiling architecture behavioral of entity xil_defaultlib.control_path_v3 [control_path_v3_default]
+Compiling architecture behavioral of entity xil_defaultlib.test_format_a
+Built simulation snapshot test_format_a_behav

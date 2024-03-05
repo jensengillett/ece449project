@@ -1,13 +1,16 @@
 # compile vhdl design source files
 vhdl xil_defaultlib  \
 "../../../../InitialPipeline.srcs/sources_1/new/ALU.vhd" \
-"../../../../InitialPipeline.srcs/sources_1/new/control_path_v2.vhd" \
 "../../../../InitialPipeline.srcs/sources_1/new/decoder.vhd" \
+"../../../../InitialPipeline.srcs/sources_1/new/latches.vhd" \
 "../../../../InitialPipeline.srcs/sources_1/new/pc_unit.vhd" \
 
 vhdl2008 xil_defaultlib  \
 "../../../../InitialPipeline.srcs/sources_1/new/RF8_16.vhd" \
-"../../../../InitialPipeline.srcs/sim_1/new/preliminary_design_review.vhd" \
+"../../../../InitialPipeline.srcs/sources_1/new/control_path_v3.vhd" \
+
+vhdl xil_defaultlib  \
+"../../../../InitialPipeline.srcs/sim_1/new/test_format_a.vhd" \
 
 # Do not sort compile order
 nosort

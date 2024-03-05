@@ -10,8 +10,8 @@ entity decoder is
         decode_enable : in STD_LOGIC;
         instruction: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         alu_op: out STD_LOGIC_VECTOR(2 DOWNTO 0);
-        mem_enable: out STD_LOGIC;
-        write_enable: out STD_LOGIC;
+        mem_op: out STD_LOGIC_VECTOR(1 DOWNTO 0);
+        wb_op: out STD_LOGIC;
         read_1_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         read_2_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         write_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
@@ -64,11 +64,11 @@ begin
             -- If this instruction writes data back to the register file, pass along the write flag.
             -- Writeback is enabled on format A instructions between 1 and 6.
             if((instruction(15 DOWNTO 9) > "0000000") and (instruction(15 DOWNTO 9) < "0000111")) then
-                write_enable <= '1';
+                wb_op <= '1';
             elsif (instruction(15 DOWNTO 9) = "0100001") then  -- 'IN'
-                write_enable <= '1';
+                wb_op <= '1';
             else
-                write_enable <= '0';
+                wb_op <= '0';
             end if;
             
             -- If this is an OUT instruction, tell the register file to read the data.
