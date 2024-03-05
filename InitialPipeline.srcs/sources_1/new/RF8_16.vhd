@@ -21,6 +21,7 @@ entity register_file is
         wr_enable: in std_logic;
         out_enable: in std_logic;
         out_port: out std_logic_vector(15 downto 0);
+        in_index: in std_logic_vector(2 downto 0);
         in_enable: in std_logic;
         in_port: in std_logic_vector(15 downto 0)
     );
@@ -40,9 +41,9 @@ begin
                 for i in 0 to 7 loop
                    reg_file(i)<= (others => '0'); 
                 end loop;
-            -- TEMPORARY: This handles the input port properly.
-            elsif(in_enable='1' and wr_enable='1') then
-             case wr_index(2 downto 0) is
+            -- write input to reg file
+            elsif(in_enable='1') then
+             case in_index(2 downto 0) is
                  when "000" => reg_file(0) <= in_port;
                  when "001" => reg_file(1) <= in_port;
                  when "010" => reg_file(2) <= in_port;
@@ -52,6 +53,7 @@ begin
                  when "110" => reg_file(6) <= in_port;
                  when "111" => reg_file(7) <= in_port;
                  when others => NULL; end case;
+            -- write to reg file
             elsif(wr_enable='1') then
                case wr_index(2 downto 0) is
                  when "000" => reg_file(0) <= wr_data;
@@ -85,8 +87,8 @@ begin
     end process;
 
     --read operation
-    process(clk) begin
-        if(rising_edge(clk) and reg_enable = '1' and out_enable = '0') then
+    --process(clk) begin
+        --if(rising_edge(clk) and reg_enable = '1' and out_enable = '0') then
             rd_data1 <=	
             reg_file(0) when(rd_index1="000") else
             reg_file(1) when(rd_index1="001") else
@@ -104,8 +106,8 @@ begin
             reg_file(4) when(rd_index2="100") else
             reg_file(5) when(rd_index2="101") else
             reg_file(6) when(rd_index2="110") else reg_file(7);
-        end if;
-    end process;
+        --end if;
+    --end process;
     
     
 end behavioural;

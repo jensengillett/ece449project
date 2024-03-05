@@ -3,11 +3,11 @@
 Dec 14 2023
 13:13:15
 C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sim_1/new/preliminary_design_review.vhd,1709576599,vhdl2008,,,,preliminary_design_review,,,,,,,,
-C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sim_1/new/test_format_a.vhd,1709598219,vhdl,,,,test_format_a,,,,,,,,
+C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sim_1/new/test_format_a.vhd,1709601166,vhdl,,,,test_format_a,,,,,,,,
 C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/ALU.vhd,1709576599,vhdl,,,,alu,,,,,,,,
-C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/RF8_16.vhd,1709599293,vhdl2008,,,,register_file,,,,,,,,
+C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/RF8_16.vhd,1709603220,vhdl2008,,,,register_file,,,,,,,,
 C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/control_path_v2.vhd,1709576599,vhdl,,,,simple_control_path,,,,,,,,
-C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/control_path_v3.vhd,1709598035,vhdl2008,,,,control_path_v3,,,,,,,,
-C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/decoder.vhd,1709596064,vhdl,,,,decoder,,,,,,,,
-C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/latches.vhd,1709595233,vhdl,,,,ex_mem_latch;id_ex_latch;if_id_latch;mem_wb_latch,,,,,,,,
+C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/control_path_v3.vhd,1709602998,vhdl2008,,,,control_path_v3,,,,,,,,
+C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/decoder.vhd,1709603110,vhdl,,,,decoder,,,,,,,,
+C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/latches.vhd,1709604224,vhdl,,,,ex_mem_latch;id_ex_latch;if_id_latch;mem_wb_latch,,,,,,,,
 C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/pc_unit.vhd,1709576599,vhdl,,,,pc_unit,,,,,,,,

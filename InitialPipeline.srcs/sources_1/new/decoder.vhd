@@ -19,6 +19,7 @@ entity decoder is
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
         in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
         out_enable: out STD_LOGIC
     );
 end decoder;
@@ -27,10 +28,13 @@ architecture Behavioral of decoder is
 
 begin
     process(clk) begin
-        if(rising_edge(clk) and decode_enable = '1') then
+        if(falling_edge(clk) and decode_enable = '1') then
             -- Move ra (output register) into between-stage storage.
             -- Thankfully, output (writeback) is always to ra, so we can just hardcode it.
             write_select <= instruction(8 DOWNTO 6);
+            if(instruction(15 DOWNTO 9) = "0100001") then
+                in_port_index <= instruction(8 DOWNTO 6);
+            end if;
         
             -- Determine which registers get loaded into the register file dependant on opcode
             -- This is required because for _some reason_ there's inconsistency on which registers are read from.
@@ -65,8 +69,8 @@ begin
             -- Writeback is enabled on format A instructions between 1 and 6.
             if((instruction(15 DOWNTO 9) > "0000000") and (instruction(15 DOWNTO 9) < "0000111")) then
                 wb_op <= '1';
-            elsif (instruction(15 DOWNTO 9) = "0100001") then  -- 'IN'
-                wb_op <= '1';
+            --elsif (instruction(15 DOWNTO 9) = "0100001") then  -- 'IN'
+                --wb_op <= '1';
             else
                 wb_op <= '0';
             end if;

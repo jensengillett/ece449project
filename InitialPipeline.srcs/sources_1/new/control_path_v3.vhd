@@ -51,12 +51,13 @@ component register_file port(
         out_enable: in std_logic;
         out_port: out std_logic_vector(15 downto 0);
         in_enable: in std_logic;
+        in_index: in std_logic_vector(2 downto 0);
         in_port: in std_logic_vector(15 downto 0)
     );
 end component;
 
 signal reg_rst, reg_wr_enable, reg_out_enable, reg_in_enable: STD_LOGIC;
-signal reg_rd_index1, reg_rd_index2, reg_wr_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
+signal reg_rd_index1, reg_rd_index2, reg_wr_index, reg_in_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal reg_rd_data1, reg_rd_data2, reg_wr_data, reg_out_port, reg_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 component decoder Port ( 
@@ -73,13 +74,14 @@ component decoder Port (
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
         in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
         out_enable: out STD_LOGIC
     );
 end component;
 
 signal decode_wb_op, decode_out_enable: STD_LOGIC;
 signal decode_instruction, decode_in_port, decode_in_write_data: STD_LOGIC_VECTOR(15 DOWNTO 0);
-signal decode_alu_op, decode_read_1_select, decode_read_2_select, decode_write_select: STD_LOGIC_VECTOR(2 DOWNTO 0);
+signal decode_alu_op, decode_read_1_select, decode_read_2_select, decode_write_select, decode_in_port_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal decode_cl_value: STD_LOGIC_VECTOR(3 DOWNTO 0);
 signal decode_mem_op: STD_LOGIC_VECTOR(1 DOWNTO 0);
 
@@ -101,12 +103,17 @@ component if_id_latch Port (
         if_in_instruction : in std_logic_vector(15 downto 0);
         if_out_instruction : out std_logic_vector(15 downto 0);
         if_in_wb_register : in std_logic_vector(2 downto 0);
-        if_out_wb_register : out std_logic_vector(2 downto 0)
+        if_out_wb_register : out std_logic_vector(2 downto 0);
+        if_in_in_port : in std_logic_vector(15 downto 0);
+        if_out_in_port : out std_logic_vector(15 downto 0);
+        if_in_in_enable : in std_logic;
+        if_out_in_enable: out std_logic
     );
 end component;
 
-signal if_in_instruction, if_out_instruction: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal if_in_instruction, if_out_instruction, if_in_in_port, if_out_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal if_in_wb_register, if_out_wb_register: STD_LOGIC_VECTOR(2 DOWNTO 0);
+signal if_in_in_enable, if_out_in_enable: STD_LOGIC;
 
 component id_ex_latch Port(
         clk: in std_logic;
@@ -219,6 +226,7 @@ begin
         out_enable => reg_out_enable,
         out_port => reg_out_port,
         in_enable => reg_in_enable,
+        in_index => reg_in_index,
         in_port => reg_in_port
     );
     
@@ -236,6 +244,7 @@ begin
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
         in_port => decode_in_port,
         in_write_data => decode_in_write_data,
+        in_port_index => decode_in_port_index,
         out_enable => decode_out_enable
     );
 
@@ -254,7 +263,11 @@ begin
         if_in_instruction => if_in_instruction,
         if_out_instruction => if_out_instruction,
         if_in_wb_register => if_in_wb_register,
-        if_out_wb_register => if_out_wb_register
+        if_out_wb_register => if_out_wb_register,
+        if_in_in_port => if_in_in_port,
+        if_out_in_port => if_out_in_port,
+        if_in_in_enable => if_in_in_enable,
+        if_out_in_enable => if_out_in_enable
     );
     
     u_id_ex : id_ex_latch port map(
@@ -304,6 +317,8 @@ begin
     
     -- Instruction fetch
     if_in_instruction <= loaded_value;
+    if_in_in_port <= in_port;
+    if_in_in_enable <= in_enable;
     
     -- Decode
     -- 'Inputs'
@@ -311,14 +326,18 @@ begin
     reg_rd_index1 <= decode_read_1_select;
     reg_rd_index2 <= decode_read_2_select;
     reg_out_enable <= decode_out_enable;
-    reg_in_port <= in_port;
-    reg_in_enable <= in_enable;
+    reg_in_port <= if_out_in_port;
+    reg_in_enable <= if_out_in_enable;
+    reg_in_index <= decode_in_port_index;
     -- 'Outputs'
     out_port <= reg_out_port;
     id_in_alu_op <= decode_alu_op;
     id_in_mem_op <= decode_mem_op;
     id_in_wb_op <= decode_wb_op;
     id_in_wb_register <= decode_write_select;
+    id_in_cl_value <= decode_cl_value;
+    id_in_rd_data_1 <= reg_rd_data1;
+    id_in_rd_data_2 <= reg_rd_data2;
     
     -- Execute
     -- 'Inputs'
