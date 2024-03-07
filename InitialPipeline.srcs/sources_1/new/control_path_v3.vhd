@@ -28,7 +28,9 @@ component alu
         negative, zero, overflow : out   STD_LOGIC;
         result  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
         extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0);
-        alu_enable: in  STD_LOGIC
+        alu_enable: in  STD_LOGIC;
+        branch_op: in STD_LOGIC_VECTOR(6 DOWNTO 0);
+        branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0)
     );
 end component;
 
@@ -36,6 +38,8 @@ signal alu_a, alu_b, alu_result, alu_extra_16_bits : STD_LOGIC_VECTOR(15 DOWNTO 
 signal alu_cl : STD_LOGIC_VECTOR(3 DOWNTO 0);
 signal alu_f : STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal alu_negative, alu_zero, alu_overflow : STD_LOGIC;
+signal alu_branch_op: STD_LOGIC_VECTOR(6 DOWNTO 0);
+signal alu_branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
 
 component register_file port(
         rst : in std_logic; clk: in std_logic; reg_enable: in std_logic;
@@ -137,8 +141,8 @@ component id_ex_latch Port(
         id_out_wb_register : out std_logic_vector(2 downto 0);
         id_in_branch_op : in std_logic_vector(6 downto 0);
         id_out_branch_op : out std_logic_vector(6 downto 0);
-        id_in_branch_disp : in std_logic_vector(8 downto 0);
-        id_out_branch_disp : out std_logic_vector(8 downto 0)
+        id_in_branch_displacement : in std_logic_vector(8 downto 0);
+        id_out_branch_displacement : out std_logic_vector(8 downto 0)
         
     );
 end component;
@@ -159,8 +163,8 @@ signal id_in_wb_register : std_logic_vector(2 downto 0);
 signal id_out_wb_register : std_logic_vector(2 downto 0);
 signal id_in_branch_op : std_logic_vector(6 downto 0);   
 signal id_out_branch_op : std_logic_vector(6 downto 0); 
-signal id_in_branch_disp : std_logic_vector(8 downto 0); 
-signal id_out_branch_disp : std_logic_vector(8 downto 0);
+signal id_in_branch_displacement : std_logic_vector(8 downto 0); 
+signal id_out_branch_displacement : std_logic_vector(8 downto 0);
 
 component ex_mem_latch Port(
         clk: in std_logic;
@@ -222,7 +226,9 @@ begin
         overflow => alu_overflow,
         result => alu_result,
         extra_16_bits => alu_extra_16_bits,
-        alu_enable => en_alu
+        alu_enable => en_alu,
+        branch_op => alu_branch_op,
+        branch_displacement => alu_branch_displacement
     );
     
     u_register: register_file port map(
@@ -305,8 +311,8 @@ begin
         id_out_wb_register => id_out_wb_register,
         id_in_branch_op => id_in_branch_op,
         id_out_branch_op => id_out_branch_op,
-        id_in_branch_disp => id_in_branch_disp,
-        id_out_branch_disp => id_out_branch_disp  
+        id_in_branch_displacement => id_in_branch_displacement,
+        id_out_branch_displacement => id_out_branch_displacement  
     );
     
     u_ex_mem: ex_mem_latch port map(
@@ -358,7 +364,7 @@ begin
     id_in_wb_register <= decode_write_select;
     id_in_cl_value <= decode_cl_value;
     id_in_branch_op <= decode_branch_op;
-    id_in_branch_disp <= decode_branch_displacement;
+    id_in_branch_displacement <= decode_branch_displacement;
     
     
     id_in_rd_data_1 <= reg_rd_data1;
@@ -370,6 +376,8 @@ begin
     alu_b <= id_out_rd_data_2;
     alu_f <= id_out_alu_op;
     alu_cl <= id_out_cl_value;
+    alu_branch_op <= id_out_branch_op;
+    alu_branch_displacement <= id_out_branch_displacement;
     -- 'Outputs'
     ex_in_alu_result <= alu_result;
     -- Negative, Zero, Overflow, and extra_16_bits should be added later.
