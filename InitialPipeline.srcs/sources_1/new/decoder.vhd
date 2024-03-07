@@ -80,12 +80,19 @@ begin
                 wb_op <= '0';
             end if;
             
+            -- Branch notes from March 07 lecture
+            
+            -- Could calculate branch address in decode stage (additional adder) to improve efficiency
+            -- See pipeline notes starting at slide 261/262 (consider predict taken/not taken methods)
+            -- Assume branch is not taken, if we reach a future stage and find out branch is taken, then clear previous stages.
+            -- This does not affect state of pipeline since we have not written to anything (registers).
+            
             -- Decode branch instructions (opcodes from 64 to 71)
             
             if ((instruction(15 DOWNTO 9) <= "1000010") and (instruction(15 DOWNTO 9) >= "1000000")) then     -- opcodes 64, 65, 66 are relative branches, so only provide displacement (Format B1)
             
                 branch_displacement <= instruction(8 DOWNTO 0);
-                branch_op <= ('1' & instruction(14 DOWNTO 9)); -- This system has no opcodes > 2^7 - 1, thus the 7th opcode bit is free for use
+                branch_op <= ('1' & instruction(14 DOWNTO 9)); -- This system has no opcodes > 2^7 - 1, thus the 6th opcode bit is free for use
                 -- Use this as a flag that a branch is occurring.    
                 
             elsif ((instruction(15 DOWNTO 9) <= "1000110") and (instruction(15 DOWNTO 9) >= "1000011")) then     -- opcodes 67, 68, 69, 70 are absolute branches, provide displacement and register A (Format B2)
