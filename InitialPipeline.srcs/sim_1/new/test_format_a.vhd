@@ -108,6 +108,8 @@ begin
                 loaded_value <= X"4080";
             when X"003C" =>
                 loaded_value <= X"0000";
+            when X"003E" =>
+                loaded_value <= X"8D0A"; -- BR.SUB R4,10 test
             when others =>
                 loaded_value <= X"0000";
         end case;
