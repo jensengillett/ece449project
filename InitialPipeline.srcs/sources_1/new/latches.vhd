@@ -53,7 +53,11 @@ entity id_ex_latch is
         id_in_cl_value: in std_logic_vector(3 downto 0);
         id_out_cl_value: out std_logic_vector(3 downto 0);
         id_in_wb_register : in std_logic_vector(2 downto 0);
-        id_out_wb_register : out std_logic_vector(2 downto 0)
+        id_out_wb_register : out std_logic_vector(2 downto 0);
+        id_in_branch_op : in std_logic_vector(6 downto 0);   
+        id_out_branch_op : out std_logic_vector(6 downto 0); 
+        id_in_branch_disp : in std_logic_vector(8 downto 0); 
+        id_out_branch_disp : out std_logic_vector(8 downto 0)
     );
 end id_ex_latch;
 
@@ -65,10 +69,13 @@ begin
             id_out_rd_data_2 <= id_in_rd_data_2;
             id_out_alu_op <= id_in_alu_op;
             id_out_cl_value <= id_in_cl_value;
+            id_out_branch_op <= id_in_branch_op;
+            id_out_branch_disp <= id_in_branch_disp;
         elsif(falling_edge(clk)) then
             id_out_mem_op <= id_in_mem_op;
             id_out_wb_op <= id_in_wb_op;
             id_out_wb_register <= id_in_wb_register;
+
         end if;
     end process;
 end Behavioral;

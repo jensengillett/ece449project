@@ -16,6 +16,8 @@ entity decoder is
         read_2_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         write_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         cl_value: out STD_LOGIC_VECTOR(3 DOWNTO 0);  -- for SHL and SHR
+        branch_op: out STD_LOGIC_VECTOR(6 DOWNTO 0);
+        branch_displacement: out STD_LOGIC_VECTOR(8 DOWNTO 0);
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
         in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
@@ -32,6 +34,9 @@ begin
             -- Move ra (output register) into between-stage storage.
             -- Thankfully, output (writeback) is always to ra, so we can just hardcode it.
             write_select <= instruction(8 DOWNTO 6);
+            branch_op(6) <= '0'; -- branch disabled at the start of each cycle.
+            -- This could be removed if there is a guarantee that all instructions will have MSB = 0
+            -- i.e. not have any opcodes > 127
             if(instruction(15 DOWNTO 9) = "0100001") then
                 in_port_index <= instruction(8 DOWNTO 6);
             end if;
@@ -73,6 +78,31 @@ begin
                 --wb_op <= '1';
             else
                 wb_op <= '0';
+            end if;
+            
+            -- Decode branch instructions (opcodes from 64 to 71)
+            
+            if ((instruction(15 DOWNTO 9) <= "1000010") and (instruction(15 DOWNTO 9) >= "1000000")) then     -- opcodes 64, 65, 66 are relative branches, so only provide displacement (Format B1)
+            
+                branch_displacement <= instruction(8 DOWNTO 0);
+                branch_op <= ('1' & instruction(14 DOWNTO 9)); -- This system has no opcodes > 2^7 - 1, thus the 7th opcode bit is free for use
+                -- Use this as a flag that a branch is occurring.    
+                
+            elsif ((instruction(15 DOWNTO 9) <= "1000110") and (instruction(15 DOWNTO 9) >= "1000011")) then     -- opcodes 67, 68, 69, 70 are absolute branches, provide displacement and register A (Format B2)
+                
+                branch_displacement <= ("000" & instruction(5 DOWNTO 0)); -- branch displacement is 9 bits long so pad displacement with 3 zeroes
+                branch_op <= ('1' & instruction(14 DOWNTO 9)); -- see above comment
+                read_1_select <= instruction(8 DOWNTO 6); -- rA register select
+                
+            elsif (instruction(15 DOWNTO 9) = "1110000") then -- opcode 71, RETURN
+            
+                branch_op <= ("1" & instruction(14 DOWNTO 9));    
+                branch_displacement <= (others => '0');
+                 
+            else
+                
+                branch_op <= (others => '0');
+                        
             end if;
             
             -- If this is an OUT instruction, tell the register file to read the data.

@@ -71,6 +71,8 @@ component decoder Port (
         read_2_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         write_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         cl_value: out STD_LOGIC_VECTOR(3 DOWNTO 0);  -- for SHL and SHR
+        branch_op: out STD_LOGIC_VECTOR(6 DOWNTO 0);
+        branch_displacement: out STD_LOGIC_VECTOR(8 DOWNTO 0);
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
         in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
@@ -82,6 +84,8 @@ end component;
 signal decode_wb_op, decode_out_enable: STD_LOGIC;
 signal decode_instruction, decode_in_port, decode_in_write_data: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal decode_alu_op, decode_read_1_select, decode_read_2_select, decode_write_select, decode_in_port_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
+signal decode_branch_op: STD_LOGIC_VECTOR(6 DOWNTO 0);
+signal decode_branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
 signal decode_cl_value: STD_LOGIC_VECTOR(3 DOWNTO 0);
 signal decode_mem_op: STD_LOGIC_VECTOR(1 DOWNTO 0);
 
@@ -130,7 +134,12 @@ component id_ex_latch Port(
         id_in_cl_value: in std_logic_vector(3 downto 0);
         id_out_cl_value: out std_logic_vector(3 downto 0);
         id_in_wb_register : in std_logic_vector(2 downto 0);
-        id_out_wb_register : out std_logic_vector(2 downto 0)
+        id_out_wb_register : out std_logic_vector(2 downto 0);
+        id_in_branch_op : in std_logic_vector(6 downto 0);
+        id_out_branch_op : out std_logic_vector(6 downto 0);
+        id_in_branch_disp : in std_logic_vector(8 downto 0);
+        id_out_branch_disp : out std_logic_vector(8 downto 0)
+        
     );
 end component;
 
@@ -148,6 +157,10 @@ signal id_in_cl_value: std_logic_vector(3 downto 0);
 signal id_out_cl_value: std_logic_vector(3 downto 0);
 signal id_in_wb_register : std_logic_vector(2 downto 0);
 signal id_out_wb_register : std_logic_vector(2 downto 0);
+signal id_in_branch_op : std_logic_vector(6 downto 0);   
+signal id_out_branch_op : std_logic_vector(6 downto 0); 
+signal id_in_branch_disp : std_logic_vector(8 downto 0); 
+signal id_out_branch_disp : std_logic_vector(8 downto 0);
 
 component ex_mem_latch Port(
         clk: in std_logic;
@@ -241,6 +254,10 @@ begin
         read_2_select => decode_read_2_select,
         write_select => decode_write_select,
         cl_value => decode_cl_value,
+        branch_op => decode_branch_op,
+        branch_displacement => decode_branch_displacement,
+        
+        
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
         in_port => decode_in_port,
         in_write_data => decode_in_write_data,
@@ -285,7 +302,11 @@ begin
         id_in_cl_value     => id_in_cl_value,      
         id_out_cl_value    => id_out_cl_value,     
         id_in_wb_register  => id_in_wb_register,   
-        id_out_wb_register => id_out_wb_register  
+        id_out_wb_register => id_out_wb_register,
+        id_in_branch_op => id_in_branch_op,
+        id_out_branch_op => id_out_branch_op,
+        id_in_branch_disp => id_in_branch_disp,
+        id_out_branch_disp => id_out_branch_disp  
     );
     
     u_ex_mem: ex_mem_latch port map(
@@ -336,6 +357,10 @@ begin
     id_in_wb_op <= decode_wb_op;
     id_in_wb_register <= decode_write_select;
     id_in_cl_value <= decode_cl_value;
+    id_in_branch_op <= decode_branch_op;
+    id_in_branch_disp <= decode_branch_displacement;
+    
+    
     id_in_rd_data_1 <= reg_rd_data1;
     id_in_rd_data_2 <= reg_rd_data2;
     
