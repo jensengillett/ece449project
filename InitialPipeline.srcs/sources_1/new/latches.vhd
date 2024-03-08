@@ -54,8 +54,8 @@ entity id_ex_latch is
         id_out_cl_value: out std_logic_vector(3 downto 0);
         id_in_wb_register : in std_logic_vector(2 downto 0);
         id_out_wb_register : out std_logic_vector(2 downto 0);
-        id_in_branch_op : in std_logic_vector(6 downto 0);   
-        id_out_branch_op : out std_logic_vector(6 downto 0); 
+        id_in_branch_op : in std_logic_vector(7 downto 0);   
+        id_out_branch_op : out std_logic_vector(7 downto 0); 
         id_in_branch_displacement : in std_logic_vector(8 downto 0); 
         id_out_branch_displacement : out std_logic_vector(8 downto 0)
     );

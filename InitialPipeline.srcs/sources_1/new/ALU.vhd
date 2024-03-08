@@ -18,8 +18,9 @@ entity alu is
         extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0);
         alu_enable: in  STD_LOGIC;
         -- Data for branching
-        branch_op: in STD_LOGIC_VECTOR(6 DOWNTO 0);
-        branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0)
+        branch_op: in STD_LOGIC_VECTOR(7 DOWNTO 0);
+        branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
+        out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0)
     );
 end alu;
 
@@ -38,10 +39,30 @@ begin
             result <= (others => '0'); -- reset result signal
             extra_16_bits <= (others => '0');  -- reset MUL extra bits
             negative <= '0'; zero <= '0'; overflow <= '0';  -- reset flags
+            out_pc(16) <= '0'; -- Reset PC modify flag
             
-            if (branch_op(6) = '1') then -- take branch actions when required
+            if (branch_op(7) = '1') then -- take branch actions when required
+                case branch_op is
+                    when "1000000" => -- BRR
+                    
+                        out_pc <= '1' & (pc + std_logic_vector(2*signed(branch_displacement)));
+                    
+                    when "1000001" => -- BRR.N
+                    
+                    when "1000010" => -- BRR.Z
+                    
+                    when "1000011" => -- BR
+                    
+                    when "1000100" => -- BR.N
+                    
+                    when "1000101" => -- BR.Z
+                    
+                    when "1000110" => -- BR.SUB
+                    
+                    when "1000111" => -- RETURN
+                
+                end case;
             
-                -- do stuff
             
             else -- otherwise do regular ALU calculations
                 case f is

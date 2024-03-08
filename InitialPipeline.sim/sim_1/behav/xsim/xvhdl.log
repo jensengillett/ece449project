@@ -1,4 +1,17 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/decoder.vhd" into library xil_defaultlib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/ALU.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'alu'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/decoder.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'decoder'
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_a.vhd" into library xil_defaultlib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/latches.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'if_id_latch'
+INFO: [VRFC 10-3107] analyzing entity 'id_ex_latch'
+INFO: [VRFC 10-3107] analyzing entity 'ex_mem_latch'
+INFO: [VRFC 10-3107] analyzing entity 'mem_wb_latch'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/pc_unit.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'pc_unit'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/RF8_16.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'register_file'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/control_path_v3.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'control_path_v3'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sim_1/new/test_format_a.vhd" into library xil_defaultlib
 INFO: [VRFC 10-3107] analyzing entity 'test_format_a'
