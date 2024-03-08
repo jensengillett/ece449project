@@ -68,6 +68,7 @@ begin
             when X"0014" =>
                 loaded_value <= X"0000";
                 in_enable <= '0';
+                in_port <= X"0000";
             when X"0016" =>
                 loaded_value <= X"0000";
             when X"0018" => 

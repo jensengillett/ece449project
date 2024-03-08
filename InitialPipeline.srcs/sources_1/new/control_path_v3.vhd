@@ -78,15 +78,18 @@ component decoder Port (
         branch_op: out STD_LOGIC_VECTOR(6 DOWNTO 0);
         branch_displacement: out STD_LOGIC_VECTOR(8 DOWNTO 0);
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
-        in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
+        out_in_port: out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_in_enable: in STD_LOGIC;
+        out_in_enable: out STD_LOGIC;
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
         out_enable: out STD_LOGIC
     );
 end component;
 
-signal decode_wb_op, decode_out_enable: STD_LOGIC;
-signal decode_instruction, decode_in_port, decode_in_write_data: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal decode_wb_op, decode_out_enable, decode_in_in_enable, decode_out_in_enable: STD_LOGIC;
+signal decode_instruction, decode_in_in_port, decode_out_in_port, decode_in_write_data: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal decode_alu_op, decode_read_1_select, decode_read_2_select, decode_write_select, decode_in_port_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal decode_branch_op: STD_LOGIC_VECTOR(6 DOWNTO 0);
 signal decode_branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
@@ -265,7 +268,10 @@ begin
         
         
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
-        in_port => decode_in_port,
+        in_in_port => decode_in_in_port,
+        out_in_port => decode_out_in_port,
+        in_in_enable => decode_in_in_enable,
+        out_in_enable => decode_out_in_enable,
         in_write_data => decode_in_write_data,
         in_port_index => decode_in_port_index,
         out_enable => decode_out_enable
@@ -353,9 +359,14 @@ begin
     reg_rd_index1 <= decode_read_1_select;
     reg_rd_index2 <= decode_read_2_select;
     reg_out_enable <= decode_out_enable;
-    reg_in_port <= if_out_in_port;
-    reg_in_enable <= if_out_in_enable;
+    --reg_in_port <= if_out_in_port;
+    decode_in_in_port <= if_out_in_port;
+    reg_in_port <= decode_out_in_port;
+    --reg_in_enable <= if_out_in_enable;
+    decode_in_in_enable <= if_out_in_enable;
+    reg_in_enable <= decode_out_in_enable;
     reg_in_index <= decode_in_port_index;
+    
     -- 'Outputs'
     out_port <= reg_out_port;
     id_in_alu_op <= decode_alu_op;

@@ -27,14 +27,14 @@ end alu;
 architecture Behavioral of alu is 
 
 begin 
-    process (f, a, b, cl, clk)  -- define local inputs
+    process (clk)  -- define local inputs
     -- Set up some internal variables used for different operations.
     variable foo    :  STD_LOGIC_VECTOR(14 DOWNTO 0) := (others => '0');  -- 15-bit, all zeros (for testing against zero)
     variable result_17 : STD_LOGIC_VECTOR(16 DOWNTO 0) := (others => '0');  -- Used for ADD/SUB results
     variable result_32 : signed(31 DOWNTO 0) := (others => '0');  -- Used for MUL results
     variable temp_a, temp_b : signed(15 DOWNTO 0) := (others => '0');  -- Used for MUL operands
     begin -- Begin process
-        if(clk'event and clk='1' and alu_enable = '1') then  -- On each clock tick
+        if(rising_edge(clk) and alu_enable = '1') then  -- On each clock tick
             result <= (others => '0'); -- reset result signal
             extra_16_bits <= (others => '0');  -- reset MUL extra bits
             negative <= '0'; zero <= '0'; overflow <= '0';  -- reset flags
@@ -69,19 +69,8 @@ begin
                         -- We remove the negatives from the original operands before multiplication.
                         -- Multiplication results are always provably positive or negative dependant on operands.
                         -- If we don't do this, the sign extension we'd have to do later screws all the calculations up.
-                        if(a(15) = '1' and b(15) = '1') then --two negatives
-                            temp_a := signed('0' & a(14 DOWNTO 0));
-                            temp_b := signed('0' & b(14 DOWNTO 0));
-                        elsif(a(15) = '1' and b(15) = '0') then  -- a is negative
-                            temp_a := signed('0' & a(14 DOWNTO 0));
-                            temp_b := signed(b(15 DOWNTO 0));
-                        elsif(a(15) = '0' and b(15) = '1') then -- b is negative
-                            temp_a := signed(a(15 DOWNTO 0));
-                            temp_b := signed('0' & b(14 DOWNTO 0));
-                        else  -- neither is negative
-                            temp_a := signed(a(15 DOWNTO 0));
-                            temp_b := signed(b(15 DOWNTO 0));
-                        end if;
+                        temp_a := signed('0' & a(14 DOWNTO 0));
+                        temp_b := signed('0' & b(14 DOWNTO 0));
                         
                         -- Perform signed multiplication of two 16-bit variables into a 32-bit variable.
                         result_32 := signed(temp_a) * signed(temp_b);

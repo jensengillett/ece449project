@@ -22,7 +22,7 @@ end if_id_latch;
 architecture Behavioral of if_id_latch is
 begin
     process(clk) begin
-        if(rising_edge(clk)) then
+        if(falling_edge(clk)) then
             if_out_instruction <= if_in_instruction;
             if_out_wb_register <= if_in_wb_register;
             if_out_in_port <= if_in_in_port;
@@ -64,18 +64,16 @@ end id_ex_latch;
 architecture Behavioral of id_ex_latch is
 begin
     process(clk) begin
-        if(rising_edge(clk)) then
+        if(falling_edge(clk)) then
             id_out_rd_data_1 <= id_in_rd_data_1;
             id_out_rd_data_2 <= id_in_rd_data_2;
             id_out_alu_op <= id_in_alu_op;
             id_out_cl_value <= id_in_cl_value;
             id_out_branch_op <= id_in_branch_op;
             id_out_branch_displacement <= id_in_branch_displacement;
-        elsif(falling_edge(clk)) then
             id_out_mem_op <= id_in_mem_op;
             id_out_wb_op <= id_in_wb_op;
             id_out_wb_register <= id_in_wb_register;
-
         end if;
     end process;
 end Behavioral;
@@ -103,10 +101,9 @@ end ex_mem_latch;
 architecture Behavioral of ex_mem_latch is
 begin
     process(clk) begin
-        if(rising_edge(clk)) then
+        if(falling_edge(clk)) then
             ex_out_alu_result <= ex_in_alu_result;
             ex_out_mem_op <= ex_in_mem_op;
-        elsif(falling_edge(clk)) then
             ex_out_wb_op <= ex_in_wb_op;
             ex_out_wb_register <= ex_in_wb_register;
         end if;
@@ -134,9 +131,7 @@ end mem_wb_latch;
 architecture Behavioral of mem_wb_latch is
 begin
     process(clk) begin
-        if(rising_edge(clk)) then
-            
-        elsif(falling_edge(clk)) then
+        if(falling_edge(clk)) then
             mem_out_alu_result <= mem_in_alu_result;
             mem_out_wb_op <= mem_in_wb_op;
             mem_out_wb_register <= mem_in_wb_register;

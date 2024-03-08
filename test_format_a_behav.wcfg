@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="test_format_a_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="test_format_a" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000000 us"></ZoomStartTime>
+      <ZoomEndTime time="689.166667 us"></ZoomEndTime>
+      <Cursor1Time time="200.000000 us"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="152"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="41" />
+   <wvobject fp_name="/test_format_a/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/pc" type="array">
+      <obj_property name="ElementShortName">pc[15:0]</obj_property>
+      <obj_property name="ObjectShortName">pc[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/reg_file" type="array">
+      <obj_property name="ElementShortName">reg_file[0:7][15:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_file[0:7][15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/loaded_value" type="array">
+      <obj_property name="ElementShortName">loaded_value[15:0]</obj_property>
+      <obj_property name="ObjectShortName">loaded_value[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/instruction" type="array">
+      <obj_property name="ElementShortName">instruction[15:0]</obj_property>
+      <obj_property name="ObjectShortName">instruction[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/out_enable" type="logic">
+      <obj_property name="ElementShortName">out_enable</obj_property>
+      <obj_property name="ObjectShortName">out_enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/out_port" type="array">
+      <obj_property name="ElementShortName">out_port[15:0]</obj_property>
+      <obj_property name="ObjectShortName">out_port[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/reg_rst" type="logic">
+      <obj_property name="ElementShortName">reg_rst</obj_property>
+      <obj_property name="ObjectShortName">reg_rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/in_port" type="array">
+      <obj_property name="ElementShortName">in_port[15:0]</obj_property>
+      <obj_property name="ObjectShortName">in_port[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/in_enable" type="logic">
+      <obj_property name="ElementShortName">in_enable</obj_property>
+      <obj_property name="ObjectShortName">in_enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_if_id/if_out_in_port" type="array">
+      <obj_property name="ElementShortName">if_out_in_port[15:0]</obj_property>
+      <obj_property name="ObjectShortName">if_out_in_port[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_if_id/if_out_in_enable" type="logic">
+      <obj_property name="ElementShortName">if_out_in_enable</obj_property>
+      <obj_property name="ObjectShortName">if_out_in_enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/in_port_index" type="array">
+      <obj_property name="ElementShortName">in_port_index[2:0]</obj_property>
+      <obj_property name="ObjectShortName">in_port_index[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/in_port" type="array">
+      <obj_property name="ElementShortName">in_port[15:0]</obj_property>
+      <obj_property name="ObjectShortName">in_port[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/in_enable" type="logic">
+      <obj_property name="ElementShortName">in_enable</obj_property>
+      <obj_property name="ObjectShortName">in_enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/alu_op" type="array">
+      <obj_property name="ElementShortName">alu_op[2:0]</obj_property>
+      <obj_property name="ObjectShortName">alu_op[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/cl_value" type="array">
+      <obj_property name="ElementShortName">cl_value[3:0]</obj_property>
+      <obj_property name="ObjectShortName">cl_value[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/rd_index1" type="array">
+      <obj_property name="ElementShortName">rd_index1[2:0]</obj_property>
+      <obj_property name="ObjectShortName">rd_index1[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/rd_index2" type="array">
+      <obj_property name="ElementShortName">rd_index2[2:0]</obj_property>
+      <obj_property name="ObjectShortName">rd_index2[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/rd_data1" type="array">
+      <obj_property name="ElementShortName">rd_data1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">rd_data1[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/rd_data2" type="array">
+      <obj_property name="ElementShortName">rd_data2[15:0]</obj_property>
+      <obj_property name="ObjectShortName">rd_data2[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/wb_op" type="logic">
+      <obj_property name="ElementShortName">wb_op</obj_property>
+      <obj_property name="ObjectShortName">wb_op</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_alu_op" type="array">
+      <obj_property name="ElementShortName">id_out_alu_op[2:0]</obj_property>
+      <obj_property name="ObjectShortName">id_out_alu_op[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_cl_value" type="array">
+      <obj_property name="ElementShortName">id_out_cl_value[3:0]</obj_property>
+      <obj_property name="ObjectShortName">id_out_cl_value[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_rd_data_1" type="array">
+      <obj_property name="ElementShortName">id_out_rd_data_1[15:0]</obj_property>
+      <obj_property name="ObjectShortName">id_out_rd_data_1[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_rd_data_2" type="array">
+      <obj_property name="ElementShortName">id_out_rd_data_2[15:0]</obj_property>
+      <obj_property name="ObjectShortName">id_out_rd_data_2[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_wb_op" type="logic">
+      <obj_property name="ElementShortName">id_out_wb_op</obj_property>
+      <obj_property name="ObjectShortName">id_out_wb_op</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_wb_register" type="array">
+      <obj_property name="ElementShortName">id_out_wb_register[2:0]</obj_property>
+      <obj_property name="ObjectShortName">id_out_wb_register[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_ex_mem/ex_in_alu_result" type="array">
+      <obj_property name="ElementShortName">ex_in_alu_result[15:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_in_alu_result[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_ex_mem/ex_out_wb_op" type="logic">
+      <obj_property name="ElementShortName">ex_out_wb_op</obj_property>
+      <obj_property name="ObjectShortName">ex_out_wb_op</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_ex_mem/ex_out_wb_register" type="array">
+      <obj_property name="ElementShortName">ex_out_wb_register[2:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_out_wb_register[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_ex_mem/ex_out_alu_result" type="array">
+      <obj_property name="ElementShortName">ex_out_alu_result[15:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_out_alu_result[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/wr_enable" type="logic">
+      <obj_property name="ElementShortName">wr_enable</obj_property>
+      <obj_property name="ObjectShortName">wr_enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/wr_index" type="array">
+      <obj_property name="ElementShortName">wr_index[2:0]</obj_property>
+      <obj_property name="ObjectShortName">wr_index[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_register/wr_data" type="array">
+      <obj_property name="ElementShortName">wr_data[15:0]</obj_property>
+      <obj_property name="ObjectShortName">wr_data[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/branch_op" type="array">
+      <obj_property name="ElementShortName">branch_op[6:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_op[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_decode/branch_displacement" type="array">
+      <obj_property name="ElementShortName">branch_displacement[8:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_displacement[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_branch_op" type="array">
+      <obj_property name="ElementShortName">id_out_branch_op[6:0]</obj_property>
+      <obj_property name="ObjectShortName">id_out_branch_op[6:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_id_ex/id_out_branch_displacement" type="array">
+      <obj_property name="ElementShortName">id_out_branch_displacement[8:0]</obj_property>
+      <obj_property name="ObjectShortName">id_out_branch_displacement[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_ex_mem/ex_in_mem_op" type="array">
+      <obj_property name="ElementShortName">ex_in_mem_op[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_in_mem_op[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_a/u0/u_ex_mem/ex_out_mem_op" type="array">
+      <obj_property name="ElementShortName">ex_out_mem_op[1:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_out_mem_op[1:0]</obj_property>
+   </wvobject>
+</wave_config>

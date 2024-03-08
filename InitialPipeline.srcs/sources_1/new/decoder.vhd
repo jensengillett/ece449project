@@ -19,7 +19,10 @@ entity decoder is
         branch_op: out STD_LOGIC_VECTOR(6 DOWNTO 0);
         branch_displacement: out STD_LOGIC_VECTOR(8 DOWNTO 0);
         -- TEMP FOR PRELIMINARY DESIGN REVIEW
-        in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
+        out_in_port: out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_in_enable: in STD_LOGIC;
+        out_in_enable: out STD_LOGIC;
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
         out_enable: out STD_LOGIC
@@ -30,16 +33,13 @@ architecture Behavioral of decoder is
 
 begin
     process(clk) begin
-        if(falling_edge(clk) and decode_enable = '1') then
+        if(rising_edge(clk) and decode_enable = '1') then  -- Decode always occurs on rising edge.
             -- Move ra (output register) into between-stage storage.
             -- Thankfully, output (writeback) is always to ra, so we can just hardcode it.
             write_select <= instruction(8 DOWNTO 6);
             branch_op(6) <= '0'; -- branch disabled at the start of each cycle.
             -- This could be removed if there is a guarantee that all instructions will have MSB = 0
             -- i.e. not have any opcodes > 127
-            if(instruction(15 DOWNTO 9) = "0100001") then
-                in_port_index <= instruction(8 DOWNTO 6);
-            end if;
         
             -- Determine which registers get loaded into the register file dependant on opcode
             -- This is required because for _some reason_ there's inconsistency on which registers are read from.
@@ -119,6 +119,14 @@ begin
             else
                 out_enable <= '0';
             end if;
+        elsif(falling_edge(clk) and decode_enable = '1') then  -- Latch for input port.
+            if(instruction(15 DOWNTO 9) = "0100001") then
+                in_port_index <= instruction(8 DOWNTO 6);
+            else
+                in_port_index <= "000";
+            end if;
+            out_in_port <= in_in_port;
+            out_in_enable <= in_in_enable;
         end if;
     end process;
 
