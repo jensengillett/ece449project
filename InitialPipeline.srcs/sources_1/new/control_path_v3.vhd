@@ -25,12 +25,13 @@ component alu
         cl      : in    STD_LOGIC_VECTOR(3 DOWNTO 0);
         f       : in    STD_LOGIC_VECTOR(2 DOWNTO 0);
         clk     : in    STD_LOGIC;
-        negative, zero, overflow : out   STD_LOGIC;
+        negative, zero, overflow : inout   STD_LOGIC;
         result  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
         extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0);
         alu_enable: in  STD_LOGIC;
         branch_op: in STD_LOGIC_VECTOR(7 DOWNTO 0);
         branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
+        in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0)
     );
 end component;
@@ -41,6 +42,7 @@ signal alu_f : STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal alu_negative, alu_zero, alu_overflow : STD_LOGIC;
 signal alu_branch_op: STD_LOGIC_VECTOR(7 DOWNTO 0);
 signal alu_branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
+signal alu_in_pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal alu_out_pc: STD_LOGIC_VECTOR(16 DOWNTO 0);
 
 component register_file port(
@@ -100,14 +102,15 @@ signal decode_mem_op: STD_LOGIC_VECTOR(1 DOWNTO 0);
 
 component pc_unit Port (
         clk: in STD_LOGIC;
-        in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
+        in_pc: in STD_LOGIC_VECTOR(16 DOWNTO 0);
         in_pc_reset: in STD_LOGIC;
         out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_pc_enable: in STD_LOGIC
      );
 end component;
 
-signal in_pc, pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal in_pc: STD_LOGIC_VECTOR(16 DOWNTO 0);
+signal pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal in_pc_reset: STD_LOGIC;
 
 component if_id_latch Port (
@@ -119,13 +122,16 @@ component if_id_latch Port (
         if_in_in_port : in std_logic_vector(15 downto 0);
         if_out_in_port : out std_logic_vector(15 downto 0);
         if_in_in_enable : in std_logic;
-        if_out_in_enable: out std_logic
+        if_out_in_enable: out std_logic;
+        if_in_pc : in std_logic_vector(15 downto 0);
+        if_out_pc : out std_logic_vector(15 downto 0)
     );
 end component;
 
 signal if_in_instruction, if_out_instruction, if_in_in_port, if_out_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal if_in_wb_register, if_out_wb_register: STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal if_in_in_enable, if_out_in_enable: STD_LOGIC;
+signal if_in_pc, if_out_pc: STD_LOGIC_VECTOR(15 downto 0);
 
 component id_ex_latch Port(
         clk: in std_logic;
@@ -146,7 +152,9 @@ component id_ex_latch Port(
         id_in_branch_op : in std_logic_vector(7 downto 0);
         id_out_branch_op : out std_logic_vector(7 downto 0);
         id_in_branch_displacement : in std_logic_vector(8 downto 0);
-        id_out_branch_displacement : out std_logic_vector(8 downto 0)
+        id_out_branch_displacement : out std_logic_vector(8 downto 0);
+        id_in_pc : in std_logic_vector(15 downto 0);
+        id_out_pc : out std_logic_vector(15 downto 0)
         
     );
 end component;
@@ -169,6 +177,7 @@ signal id_in_branch_op : std_logic_vector(7 downto 0);
 signal id_out_branch_op : std_logic_vector(7 downto 0); 
 signal id_in_branch_displacement : std_logic_vector(8 downto 0); 
 signal id_out_branch_displacement : std_logic_vector(8 downto 0);
+signal id_in_pc, id_out_pc: STD_LOGIC_VECTOR(15 downto 0);
 
 component ex_mem_latch Port(
         clk: in std_logic;
@@ -233,6 +242,7 @@ begin
         alu_enable => en_alu,
         branch_op => alu_branch_op,
         branch_displacement => alu_branch_displacement,
+        in_pc => alu_in_pc,
         out_pc => alu_out_pc
     );
     
@@ -297,7 +307,9 @@ begin
         if_in_in_port => if_in_in_port,
         if_out_in_port => if_out_in_port,
         if_in_in_enable => if_in_in_enable,
-        if_out_in_enable => if_out_in_enable
+        if_out_in_enable => if_out_in_enable,
+        if_in_pc => if_in_pc,
+        if_out_pc => if_out_pc
     );
     
     u_id_ex : id_ex_latch port map(
@@ -319,7 +331,10 @@ begin
         id_in_branch_op => id_in_branch_op,
         id_out_branch_op => id_out_branch_op,
         id_in_branch_displacement => id_in_branch_displacement,
-        id_out_branch_displacement => id_out_branch_displacement  
+        id_out_branch_displacement => id_out_branch_displacement,
+        id_in_pc => id_in_pc,
+        id_out_pc => id_out_pc
+          
     );
     
     u_ex_mem: ex_mem_latch port map(
@@ -349,10 +364,12 @@ begin
     clk <= in_clk;
     reg_rst <= in_reg_reset;
     
+    
     -- Instruction fetch
     if_in_instruction <= loaded_value;
     if_in_in_port <= in_port;
     if_in_in_enable <= in_enable;
+    if_in_pc <= pc;
     
     -- Decode
     -- 'Inputs'
@@ -368,6 +385,7 @@ begin
     reg_in_enable <= decode_out_in_enable;
     reg_in_index <= decode_in_port_index;
     
+    
     -- 'Outputs'
     out_port <= reg_out_port;
     id_in_alu_op <= decode_alu_op;
@@ -377,6 +395,7 @@ begin
     id_in_cl_value <= decode_cl_value;
     id_in_branch_op <= decode_branch_op;
     id_in_branch_displacement <= decode_branch_displacement;
+    id_in_pc <= if_out_pc;
     
     
     id_in_rd_data_1 <= reg_rd_data1;
@@ -390,6 +409,7 @@ begin
     alu_cl <= id_out_cl_value;
     alu_branch_op <= id_out_branch_op;
     alu_branch_displacement <= id_out_branch_displacement;
+    alu_in_pc <= id_out_pc;
     in_pc <= alu_out_pc; -- pass new PC value to PC unit, PC unit will determine whether to use it or not
     -- 'Outputs'
     ex_in_alu_result <= alu_result;

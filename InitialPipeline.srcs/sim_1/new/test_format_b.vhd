@@ -3,11 +3,11 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity test_format_a is
+entity test_format_b is
 --  Port ( );
-end test_format_a;
+end test_format_b;
 
-architecture Behavioral of test_format_a is
+architecture Behavioral of test_format_b is
 
 component control_path_v3 Port ( 
     out_pc : out std_logic_vector(15 downto 0);
@@ -76,9 +76,9 @@ begin
             when X"001A" =>
                 loaded_value <= X"0000";
             when X"001C" =>
-                loaded_value <= X"02D1";
-            when X"001E" =>
                 loaded_value <= X"0000";
+            when X"001E" =>
+                loaded_value <= X"04CA";
             when X"0020" =>
                 loaded_value <= X"0000";
             when X"0022" =>
@@ -86,29 +86,23 @@ begin
             when X"0024" =>
                 loaded_value <= X"0000";
             when X"0026" =>
-                loaded_value <= X"0AC2";
+                loaded_value <= X"0000";
             when X"0028" =>
                 loaded_value <= X"0000";
             when X"002A" =>
-                loaded_value <= X"0000";
+                loaded_value <= X"0EC0";
             when X"002C" =>
                 loaded_value <= X"0000";
             when X"002E" =>
                 loaded_value <= X"0000";
             when X"0030" =>
-                loaded_value <= X"068B";
+                loaded_value <= X"0000";
             when X"0032" =>
                 loaded_value <= X"0000";
             when X"0034" =>
                 loaded_value <= X"0000";
             when X"0036" =>
-                loaded_value <= X"0000";
-            when X"0038" =>
-                loaded_value <= X"0000";
-            when X"003A" =>
-                loaded_value <= X"4080";
-            when X"003C" =>
-                loaded_value <= X"0000";
+                loaded_value <= X"8228";
             when others =>
                 loaded_value <= X"0000";
         end case;

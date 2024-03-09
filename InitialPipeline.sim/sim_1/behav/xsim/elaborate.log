@@ -1,7 +1,7 @@
 Vivado Simulator v2023.2
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: G:/Vivado/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot test_format_a_behav xil_defaultlib.test_format_a -log elaborate.log 
+Running: G:/Vivado/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot test_format_b_behav xil_defaultlib.test_format_b -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Completed static elaboration
@@ -24,5 +24,5 @@ Compiling architecture behavioral of entity xil_defaultlib.id_ex_latch [id_ex_la
 Compiling architecture behavioral of entity xil_defaultlib.ex_mem_latch [ex_mem_latch_default]
 Compiling architecture behavioral of entity xil_defaultlib.mem_wb_latch [mem_wb_latch_default]
 Compiling architecture behavioral of entity xil_defaultlib.control_path_v3 [control_path_v3_default]
-Compiling architecture behavioral of entity xil_defaultlib.test_format_a
-Built simulation snapshot test_format_a_behav
+Compiling architecture behavioral of entity xil_defaultlib.test_format_b
+Built simulation snapshot test_format_b_behav

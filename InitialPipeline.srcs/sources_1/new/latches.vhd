@@ -15,7 +15,9 @@ entity if_id_latch is
         if_in_in_port : in std_logic_vector(15 downto 0);
         if_out_in_port : out std_logic_vector(15 downto 0);
         if_in_in_enable : in std_logic;
-        if_out_in_enable: out std_logic
+        if_out_in_enable: out std_logic;
+        if_in_pc : in std_logic_vector(15 downto 0);
+        if_out_pc: out std_logic_vector(15 downto 0)
     );
 end if_id_latch;
 
@@ -27,6 +29,7 @@ begin
             if_out_wb_register <= if_in_wb_register;
             if_out_in_port <= if_in_in_port;
             if_out_in_enable <= if_in_in_enable;
+            if_out_pc <= if_in_pc;
         end if;
     end process;
 end Behavioral;
@@ -57,7 +60,9 @@ entity id_ex_latch is
         id_in_branch_op : in std_logic_vector(7 downto 0);   
         id_out_branch_op : out std_logic_vector(7 downto 0); 
         id_in_branch_displacement : in std_logic_vector(8 downto 0); 
-        id_out_branch_displacement : out std_logic_vector(8 downto 0)
+        id_out_branch_displacement : out std_logic_vector(8 downto 0);
+        id_in_pc : in std_logic_vector(15 downto 0);
+        id_out_pc : out std_logic_vector(15 downto 0)
     );
 end id_ex_latch;
 
@@ -74,6 +79,7 @@ begin
             id_out_mem_op <= id_in_mem_op;
             id_out_wb_op <= id_in_wb_op;
             id_out_wb_register <= id_in_wb_register;
+            id_out_pc <= id_in_pc;
         end if;
     end process;
 end Behavioral;

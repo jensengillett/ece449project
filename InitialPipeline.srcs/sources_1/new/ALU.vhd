@@ -13,13 +13,14 @@ entity alu is
         cl      : in    STD_LOGIC_VECTOR(3 DOWNTO 0);
         f       : in    STD_LOGIC_VECTOR(2 DOWNTO 0);
         clk     : in    STD_LOGIC;
-        negative, zero, overflow : out   STD_LOGIC;
+        negative, zero, overflow : inout   STD_LOGIC;
         result  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
         extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0);
         alu_enable: in  STD_LOGIC;
         -- Data for branching
         branch_op: in STD_LOGIC_VECTOR(7 DOWNTO 0);
         branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
+        in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0)
     );
 end alu;
@@ -34,32 +35,50 @@ begin
     variable result_17 : STD_LOGIC_VECTOR(16 DOWNTO 0) := (others => '0');  -- Used for ADD/SUB results
     variable result_32 : signed(31 DOWNTO 0) := (others => '0');  -- Used for MUL results
     variable temp_a, temp_b : signed(15 DOWNTO 0) := (others => '0');  -- Used for MUL operands
+    variable temp_pc: std_logic_vector(17 downto 0) := (others => '0');
     begin -- Begin process
         if(rising_edge(clk) and alu_enable = '1') then  -- On each clock tick
             result <= (others => '0'); -- reset result signal
             extra_16_bits <= (others => '0');  -- reset MUL extra bits
-            negative <= '0'; zero <= '0'; overflow <= '0';  -- reset flags
+            -- negative <= '0'; zero <= '0'; overflow <= '0';  -- reset flags
+            -- commented out since we don't want to reset flags at start of every cycle as they need to be used for branching.
+            -- thus the ALU operations will be responsible for setting the overflow flag to 0 if no overflow,
+            -- and TEST is responsible for setting or resetting 0 or 1 flags
             out_pc(16) <= '0'; -- Reset PC modify flag
+            
+            -- these need some testing
             
             if (branch_op(7) = '1') then -- take branch actions when required
                 case branch_op is
-                    when "1000000" => -- BRR
+                    when "11000000" => -- BRR
                     
-                        out_pc <= '1' & (pc + std_logic_vector(2*signed(branch_displacement)));
+                        out_pc <= '1' & (in_pc + std_logic_vector(2*signed(branch_displacement)));
                     
-                    when "1000001" => -- BRR.N
+                    when "11000001" => -- BRR.N
                     
-                    when "1000010" => -- BRR.Z
+                        if(negative = '1') then
+                            temp_pc:= std_logic_vector(2*signed(branch_displacement));
+                            out_pc <= '1' & (in_pc + temp_pc(15 DOWNTO 0));
+                        
+                        else
+                        
+                            -- Implement pipeline flush
+                        
+                        end if;
                     
-                    when "1000011" => -- BR
+                    when "11000010" => -- BRR.Z
                     
-                    when "1000100" => -- BR.N
+                    when "11000011" => -- BR
                     
-                    when "1000101" => -- BR.Z
+                    when "11000100" => -- BR.N
                     
-                    when "1000110" => -- BR.SUB
+                    when "11000101" => -- BR.Z
                     
-                    when "1000111" => -- RETURN
+                    when "11000110" => -- BR.SUB
+                    
+                    when "11000111" => -- RETURN
+                    
+                    when others =>
                 
                 end case;
             
@@ -68,6 +87,7 @@ begin
                 case f is
                     when "000" =>  -- NOP
                         -- No inputs, no outputs.
+                        overflow <= '0';
                     when "001" =>  -- ADD
                         -- Perform signed addition. We sign-extend a and b beforehand to get the correct 17-bit result with overflow.
                         result_17 := std_logic_vector(signed(a(15) & a) + signed(b(15) & b));  
@@ -117,13 +137,14 @@ begin
                         end if;
                     when "100" =>  -- NAND
                         result <= a NAND b;  
+                        overflow <= '0';
                     when "101" =>  -- SHL (Shift Left)
                         -- Both SHL and SHR use the built-in NUMERIC_STD operators, but they require type conversion of a and cl to unsigned and integer, respectively.
                         result <= std_logic_vector(shift_left(unsigned(a), to_integer(unsigned(cl))));
-                        -- TODO: Because this operator (and SHR) write the output to the same register as the input, for one cycle the input becomes the output value.
-                        -- This does not affect the correctness of the code; it is an issue with the 'fake concurrency' method we're using to pipeline.
+                        overflow <= '0';
                     when "110" =>  -- SHR (Shift Right)
                         result <= std_logic_vector(shift_right(unsigned(a), to_integer(unsigned(cl))));
+                        overflow <= '0';
                     when others =>  -- TEST
                         -- test for zero                    
                         if(a(14 DOWNTO 0) = foo) then
