@@ -35,7 +35,7 @@ begin
     variable result_17 : STD_LOGIC_VECTOR(16 DOWNTO 0) := (others => '0');  -- Used for ADD/SUB results
     variable result_32 : signed(31 DOWNTO 0) := (others => '0');  -- Used for MUL results
     variable temp_a, temp_b : signed(15 DOWNTO 0) := (others => '0');  -- Used for MUL operands
-    variable temp_pc: std_logic_vector(17 downto 0) := (others => '0');
+    variable temp_pc: std_logic_vector(17 downto 0) := (others => '0'); -- Used for branch operations
     begin -- Begin process
         if(rising_edge(clk) and alu_enable = '1') then  -- On each clock tick
             result <= (others => '0'); -- reset result signal
@@ -51,15 +51,13 @@ begin
             if (branch_op(7) = '1') then -- take branch actions when required
                 case branch_op is
                     when "11000000" => -- BRR
-                    
                         out_pc <= '1' & (in_pc + std_logic_vector(2*signed(branch_displacement)));
                     
                     when "11000001" => -- BRR.N
-                    
                         if(negative = '1') then
-                            temp_pc:= std_logic_vector(2*signed(branch_displacement));
+                            temp_pc:= std_logic_vector(2*signed(branch_displacement)); -- Converting 2*signed(branch_displacement) to logic vector is 18 bits long for some reason.
+                            -- Use a temp variable to store 18 bits then only take lower 16 for output
                             out_pc <= '1' & (in_pc + temp_pc(15 DOWNTO 0));
-                        
                         else
                         
                             -- Implement pipeline flush
@@ -67,12 +65,39 @@ begin
                         end if;
                     
                     when "11000010" => -- BRR.Z
+                        if (zero = '1') then
+                            temp_pc:= std_logic_vector(2*signed(branch_displacement));
+                            out_pc <= '1' & (in_pc + temp_pc(15 DOWNTO 0));
+                            
+                        else
+                        
+                            -- Implement pipeline flush
+                            
+                        end if;
                     
                     when "11000011" => -- BR
+                        temp_pc:= std_logic_vector(signed(a) + 2*signed(branch_displacement));
+                        out_pc <= '1' & (in_pc + temp_pc(15 DOWNTO 0));
                     
                     when "11000100" => -- BR.N
+                        if(negative = '1') then
+                            temp_pc:= std_logic_vector(signed(a) + 2*signed(branch_displacement));
+                            out_pc <= '1' & (in_pc + temp_pc(15 DOWNTO 0));
+                        else
+                        
+                            -- Implement pipeline flush
+                        
+                        end if;
                     
                     when "11000101" => -- BR.Z
+                        if(zero = '1') then
+                            temp_pc:= std_logic_vector(signed(a) + 2*signed(branch_displacement));
+                            out_pc <= '1' & (in_pc + temp_pc(15 DOWNTO 0));
+                        else
+                        
+                            -- Implement pipeline flush
+                        
+                        end if;
                     
                     when "11000110" => -- BR.SUB
                     
