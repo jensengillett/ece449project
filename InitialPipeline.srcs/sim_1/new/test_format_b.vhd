@@ -51,6 +51,21 @@ begin
         case pc is
             -- For some reason there's an offset set at the start of the assembly file that makes it not have data until 0x0216.
             -- This was not replicated here.
+            
+    /*      IN r1   ; 01
+		    IN r2	; 03
+		    IN r3	; 05
+		    NOP
+		    NOP
+		    ADD r4, r1, r1
+		    ADD r5, r2, r2
+		    ADD r6, r3, r3
+		    TEST r4
+		    BRR.n 40
+		    ADD r4, r1, r2
+		    ADD r5, r2, r3
+		    ADD r6, r1, r3 */
+		
             when X"0000" =>   -- Initial state setup. Not part of the ASM file.
                 reg_rst <= '1';
                 in_enable <= '0';
@@ -60,51 +75,39 @@ begin
             when X"0010" =>
                 loaded_value <= X"4240";
                 in_enable <= '1';
-                in_port <= X"0003";
+                in_port <= X"0001";
             when X"0012" =>
                 loaded_value <= X"4280";
                 in_enable <= '1';
-                in_port <= X"0005";
+                in_port <= X"0003";
             when X"0014" =>
-                loaded_value <= X"0000";
-                in_enable <= '0';
-                in_port <= X"0000";
+                loaded_value <= X"42C0";
+                in_enable <= '1';
+                in_port <= X"0005";
             when X"0016" =>
                 loaded_value <= X"0000";
+                in_enable <= '0';
             when X"0018" => 
                 loaded_value <= X"0000";
             when X"001A" =>
-                loaded_value <= X"0000";
+                loaded_value <= X"0309";
             when X"001C" =>
-                loaded_value <= X"0000";
+                loaded_value <= X"0352";
             when X"001E" =>
-                loaded_value <= X"04CA";
+                loaded_value <= X"039B";
             when X"0020" =>
-                loaded_value <= X"0000";
+                loaded_value <= X"0F00";
             when X"0022" =>
-                loaded_value <= X"0000";
-            when X"0024" =>
-                loaded_value <= X"0000";
-            when X"0026" =>
-                loaded_value <= X"0000";
-            when X"0028" =>
-                loaded_value <= X"0000";
-            when X"002A" =>
-                loaded_value <= X"0EC0";
-            when X"002C" =>
-                loaded_value <= X"0000";
-            when X"002E" =>
-                loaded_value <= X"0000";
-            when X"0030" =>
-                loaded_value <= X"0000";
-            when X"0032" =>
-                loaded_value <= X"0000";
-            when X"0034" =>
-                loaded_value <= X"0000";
-            when X"0036" =>
                 loaded_value <= X"8228";
+            when X"0024" =>
+                loaded_value <= X"030A";
+            when X"0026" =>
+                loaded_value <= X"0353";
+            when X"0028" =>
+                loaded_value <= X"038B";
             when others =>
                 loaded_value <= X"0000";
+               
         end case;
     end process;
 

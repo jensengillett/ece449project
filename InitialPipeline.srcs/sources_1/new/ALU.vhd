@@ -21,7 +21,8 @@ entity alu is
         branch_op: in STD_LOGIC_VECTOR(7 DOWNTO 0);
         branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
         in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
-        out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0)
+        out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0);
+        flush_pipeline: out STD_LOGIC -- ALU signal to indicate that control path that a branch was not taken
     );
 end alu;
 
@@ -39,6 +40,7 @@ begin
     begin -- Begin process
         if(rising_edge(clk) and alu_enable = '1') then  -- On each clock tick
             result <= (others => '0'); -- reset result signal
+            flush_pipeline <= '0';
             extra_16_bits <= (others => '0');  -- reset MUL extra bits
             -- negative <= '0'; zero <= '0'; overflow <= '0';  -- reset flags
             -- commented out since we don't want to reset flags at start of every cycle as they need to be used for branching.
@@ -61,7 +63,8 @@ begin
                         else
                         
                             -- Implement pipeline flush
-                        
+                            -- May also need to move PC back to redo instructions that got flushed
+                            flush_pipeline <= '1';
                         end if;
                     
                     when "11000010" => -- BRR.Z
@@ -72,7 +75,8 @@ begin
                         else
                         
                             -- Implement pipeline flush
-                            
+                            -- May also need to move PC back to redo instructions that got flushed
+                            flush_pipeline <= '1';
                         end if;
                     
                     when "11000011" => -- BR
@@ -86,6 +90,8 @@ begin
                         else
                         
                             -- Implement pipeline flush
+                            -- May also need to move PC back to redo instructions that got flushed
+                            flush_pipeline <= '1';
                         
                         end if;
                     
@@ -96,6 +102,8 @@ begin
                         else
                         
                             -- Implement pipeline flush
+                            -- May also need to move PC back to redo instructions that got flushed
+                            flush_pipeline <= '1';
                         
                         end if;
                     

@@ -32,7 +32,8 @@ component alu
         branch_op: in STD_LOGIC_VECTOR(7 DOWNTO 0);
         branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
         in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
-        out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0)
+        out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0);
+        flush_pipeline: out STD_LOGIC
     );
 end component;
 
@@ -44,6 +45,7 @@ signal alu_branch_op: STD_LOGIC_VECTOR(7 DOWNTO 0);
 signal alu_branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
 signal alu_in_pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal alu_out_pc: STD_LOGIC_VECTOR(16 DOWNTO 0);
+signal alu_flush_pipeline: STD_LOGIC;
 
 component register_file port(
         rst : in std_logic; clk: in std_logic; reg_enable: in std_logic;
@@ -243,7 +245,8 @@ begin
         branch_op => alu_branch_op,
         branch_displacement => alu_branch_displacement,
         in_pc => alu_in_pc,
-        out_pc => alu_out_pc
+        out_pc => alu_out_pc,
+        flush_pipeline => alu_flush_pipeline
     );
     
     u_register: register_file port map(
@@ -432,5 +435,20 @@ begin
     reg_wr_data <= mem_out_alu_result;
     reg_wr_enable <= mem_out_wb_op;
     -- No outputs
+
+    process(clk) -- process to handle pipeline flushing when branch is not taken
+    begin
+        if((alu_flush_pipeline = '1') and (clk = '1')) then
+        
+        -- Why does this break all of the IF/ID inputs?
+        
+           -- if_in_instruction <= (others => '0'); -- first attempt at flushing pipeline, 1st stage only for now
+           -- if_in_in_port <= (others => '0');
+           -- if_in_in_enable <= '0';
+           -- if_in_pc <= (others => '0');
+            
+            
+        end if;
+    end process;
 
 end Behavioral;
