@@ -90,7 +90,7 @@ begin
             when X"0018" => 
                 loaded_value <= X"0000";
             when X"001A" =>
-                loaded_value <= X"0309";
+                loaded_value <= X"0509";
             when X"001C" =>
                 loaded_value <= X"0352";
             when X"001E" =>
@@ -98,7 +98,7 @@ begin
             when X"0020" =>
                 loaded_value <= X"0F00";
             when X"0022" =>
-                loaded_value <= X"8228";
+                loaded_value <= X"85F8";
             when X"0024" =>
                 loaded_value <= X"030A";
             when X"0026" =>

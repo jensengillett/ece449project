@@ -11,29 +11,76 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000000 us"></ZoomStartTime>
-      <ZoomEndTime time="750.000001 us"></ZoomEndTime>
-      <Cursor1Time time="530.000000 us"></Cursor1Time>
+      <ZoomEndTime time="700.000001 us"></ZoomEndTime>
+      <Cursor1Time time="380.000000 us"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="167"></NameColumnWidth>
-      <ValueColumnWidth column_width="144"></ValueColumnWidth>
+      <ValueColumnWidth column_width="120"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="4" />
-   <wvobject fp_name="/test_format_b/u0/u_pc/clk" type="logic">
+   <WVObjectSize size="16" />
+   <wvobject fp_name="/test_format_b/u0/u_alu/a" type="array">
+      <obj_property name="ElementShortName">a[15:0]</obj_property>
+      <obj_property name="ObjectShortName">a[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/b" type="array">
+      <obj_property name="ElementShortName">b[15:0]</obj_property>
+      <obj_property name="ObjectShortName">b[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/cl" type="array">
+      <obj_property name="ElementShortName">cl[3:0]</obj_property>
+      <obj_property name="ObjectShortName">cl[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/f" type="array">
+      <obj_property name="ElementShortName">f[2:0]</obj_property>
+      <obj_property name="ObjectShortName">f[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_format_b/u0/u_if_id/if_in_instruction" type="array">
-      <obj_property name="ElementShortName">if_in_instruction[15:0]</obj_property>
-      <obj_property name="ObjectShortName">if_in_instruction[15:0]</obj_property>
+   <wvobject fp_name="/test_format_b/u0/u_alu/negative" type="logic">
+      <obj_property name="ElementShortName">negative</obj_property>
+      <obj_property name="ObjectShortName">negative</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_format_b/u0/u_pc/current_pc" type="array">
-      <obj_property name="ElementShortName">current_pc[15:0]</obj_property>
-      <obj_property name="ObjectShortName">current_pc[15:0]</obj_property>
+   <wvobject fp_name="/test_format_b/u0/u_alu/zero" type="logic">
+      <obj_property name="ElementShortName">zero</obj_property>
+      <obj_property name="ObjectShortName">zero</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/overflow" type="logic">
+      <obj_property name="ElementShortName">overflow</obj_property>
+      <obj_property name="ObjectShortName">overflow</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/result" type="array">
+      <obj_property name="ElementShortName">result[15:0]</obj_property>
+      <obj_property name="ObjectShortName">result[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/extra_16_bits" type="array">
+      <obj_property name="ElementShortName">extra_16_bits[15:0]</obj_property>
+      <obj_property name="ObjectShortName">extra_16_bits[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/alu_enable" type="logic">
+      <obj_property name="ElementShortName">alu_enable</obj_property>
+      <obj_property name="ObjectShortName">alu_enable</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/branch_op" type="array">
+      <obj_property name="ElementShortName">branch_op[7:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_op[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/branch_displacement" type="array">
+      <obj_property name="ElementShortName">branch_displacement[8:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_displacement[8:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/in_pc" type="array">
+      <obj_property name="ElementShortName">in_pc[15:0]</obj_property>
+      <obj_property name="ObjectShortName">in_pc[15:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/test_format_b/u0/u_alu/out_pc" type="array">
       <obj_property name="ElementShortName">out_pc[16:0]</obj_property>
       <obj_property name="ObjectShortName">out_pc[16:0]</obj_property>
-      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_format_b/u0/u_alu/flush_pipeline" type="logic">
+      <obj_property name="ElementShortName">flush_pipeline</obj_property>
+      <obj_property name="ObjectShortName">flush_pipeline</obj_property>
    </wvobject>
 </wave_config>

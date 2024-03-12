@@ -119,20 +119,18 @@ component if_id_latch Port (
         clk: in std_logic;
         if_in_instruction : in std_logic_vector(15 downto 0);
         if_out_instruction : out std_logic_vector(15 downto 0);
-        if_in_wb_register : in std_logic_vector(2 downto 0);
-        if_out_wb_register : out std_logic_vector(2 downto 0);
         if_in_in_port : in std_logic_vector(15 downto 0);
         if_out_in_port : out std_logic_vector(15 downto 0);
         if_in_in_enable : in std_logic;
         if_out_in_enable: out std_logic;
         if_in_pc : in std_logic_vector(15 downto 0);
-        if_out_pc : out std_logic_vector(15 downto 0)
+        if_out_pc : out std_logic_vector(15 downto 0);
+        if_in_flush_pipeline: in std_logic
     );
 end component;
 
 signal if_in_instruction, if_out_instruction, if_in_in_port, if_out_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
-signal if_in_wb_register, if_out_wb_register: STD_LOGIC_VECTOR(2 DOWNTO 0);
-signal if_in_in_enable, if_out_in_enable: STD_LOGIC;
+signal if_in_in_enable, if_out_in_enable, if_in_flush_pipeline: STD_LOGIC;
 signal if_in_pc, if_out_pc: STD_LOGIC_VECTOR(15 downto 0);
 
 component id_ex_latch Port(
@@ -305,14 +303,13 @@ begin
         clk => clk,
         if_in_instruction => if_in_instruction,
         if_out_instruction => if_out_instruction,
-        if_in_wb_register => if_in_wb_register,
-        if_out_wb_register => if_out_wb_register,
         if_in_in_port => if_in_in_port,
         if_out_in_port => if_out_in_port,
         if_in_in_enable => if_in_in_enable,
         if_out_in_enable => if_out_in_enable,
         if_in_pc => if_in_pc,
-        if_out_pc => if_out_pc
+        if_out_pc => if_out_pc,
+        if_in_flush_pipeline => if_in_flush_pipeline
     );
     
     u_id_ex : id_ex_latch port map(
@@ -367,6 +364,8 @@ begin
     clk <= in_clk;
     reg_rst <= in_reg_reset;
     
+    -- Link pipeline flush flag from ALU -> Control path -> IF/ID register
+    if_in_flush_pipeline <= alu_flush_pipeline;
     
     -- Instruction fetch
     if_in_instruction <= loaded_value;
@@ -435,20 +434,5 @@ begin
     reg_wr_data <= mem_out_alu_result;
     reg_wr_enable <= mem_out_wb_op;
     -- No outputs
-
-    process(clk) -- process to handle pipeline flushing when branch is not taken
-    begin
-        if((alu_flush_pipeline = '1') and (clk = '1')) then
-        
-        -- Why does this break all of the IF/ID inputs?
-        
-           -- if_in_instruction <= (others => '0'); -- first attempt at flushing pipeline, 1st stage only for now
-           -- if_in_in_port <= (others => '0');
-           -- if_in_in_enable <= '0';
-           -- if_in_pc <= (others => '0');
-            
-            
-        end if;
-    end process;
 
 end Behavioral;

@@ -10,23 +10,34 @@ entity if_id_latch is
         clk: in std_logic;
         if_in_instruction : in std_logic_vector(15 downto 0);
         if_out_instruction : out std_logic_vector(15 downto 0);
-        if_in_wb_register : in std_logic_vector(2 downto 0);
-        if_out_wb_register : out std_logic_vector(2 downto 0);
         if_in_in_port : in std_logic_vector(15 downto 0);
         if_out_in_port : out std_logic_vector(15 downto 0);
         if_in_in_enable : in std_logic;
         if_out_in_enable: out std_logic;
         if_in_pc : in std_logic_vector(15 downto 0);
-        if_out_pc: out std_logic_vector(15 downto 0)
+        if_out_pc: out std_logic_vector(15 downto 0);
+        if_in_flush_pipeline: in std_logic
     );
 end if_id_latch;
 
 architecture Behavioral of if_id_latch is
+
 begin
-    process(clk) begin
-        if(falling_edge(clk)) then
-            if_out_instruction <= if_in_instruction;
-            if_out_wb_register <= if_in_wb_register;
+    process(clk)
+    variable temp_instruction : std_logic_vector(15 downto 0);
+    begin
+        temp_instruction := if_in_instruction;
+    
+        if(rising_edge(clk)) then
+        
+            if (if_in_flush_pipeline = '1') then
+                temp_instruction := (others => '0');
+            else 
+                temp_instruction := if_in_instruction;
+            end if;        
+    
+        elsif(falling_edge(clk)) then
+            if_out_instruction <= temp_instruction;
             if_out_in_port <= if_in_in_port;
             if_out_in_enable <= if_in_in_enable;
             if_out_pc <= if_in_pc;
