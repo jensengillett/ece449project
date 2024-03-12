@@ -9,7 +9,6 @@ entity control_path_v3 is
         out_port: out std_logic_vector(15 downto 0);
         in_port: in std_logic_vector(15 downto 0);
         in_enable: in std_logic;
-        loaded_value: in std_logic_vector(15 downto 0);
         in_clk: in std_logic;
         in_reg_reset: in std_logic
     );
@@ -221,6 +220,17 @@ signal mem_out_wb_op: std_logic;
 signal mem_in_wb_register : std_logic_vector(2 downto 0);
 signal mem_out_wb_register : std_logic_vector(2 downto 0);
 
+component rom Port ( 
+        data_out: out std_logic_vector(15 downto 0);
+        address: in std_logic_vector(7 downto 0);
+        clk: in std_logic
+    );
+end component;
+
+signal rom_data_out: std_logic_vector(15 downto 0);
+signal rom_address: std_logic_vector(7 downto 0); 
+
+
 -- Enable lines
 signal en_decode: STD_LOGIC := '1';
 signal en_regread: STD_LOGIC := '1';
@@ -362,14 +372,21 @@ begin
         mem_out_wb_register => mem_out_wb_register 
     );
     
+    u_rom: rom port map(
+        clk => clk,
+        data_out => rom_data_out,
+        address => rom_address
+    );
+    
     -- Link PC and clk
     out_pc <= pc;
     clk <= in_clk;
     reg_rst <= in_reg_reset;
+    rom_address <= pc(8 downto 1);
     
     
     -- Instruction fetch
-    if_in_instruction <= loaded_value;
+    if_in_instruction <= rom_data_out;
     if_in_in_port <= in_port;
     if_in_in_enable <= in_enable;
     if_in_pc <= pc;
