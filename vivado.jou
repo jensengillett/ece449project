@@ -1,0 +1,28 @@
+#-----------------------------------------------------------
+# Vivado v2023.2.1 (64-bit)
+# SW Build 4081461 on Thu Dec 14 12:24:51 MST 2023
+# IP Build 4080415 on Thu Dec 14 21:01:57 MST 2023
+# SharedData Build 4077621 on Mon Dec 11 00:23:44 MST 2023
+# Start of session at: Mon Mar 18 16:05:28 2024
+# Process ID: 17608
+# Current directory: C:/School/ece449/InitialPipeline
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent16004 C:\School\ece449\InitialPipeline\InitialPipeline.xpr
+# Log file: C:/School/ece449/InitialPipeline/vivado.log
+# Journal file: C:/School/ece449/InitialPipeline\vivado.jou
+# Running On: INVESTIGATOR, OS: Windows, CPU Frequency: 1996 MHz, CPU Physical cores: 8, Host memory: 16522 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/School/ece449/InitialPipeline/InitialPipeline.xpr
+update_compile_order -fileset sources_1
+launch_simulation
+open_wave_config C:/School/ece449/InitialPipeline/test_format_a_behav.wcfg
+source test_format_b.tcl
+restart
+run 700 us
+restart
+run 500 us
+current_wave_config {test_format_a_behav.wcfg}
+add_wave {{/test_format_b/u0/u_if_id}} 
+restart
+run 500 us
+close_sim

@@ -44,7 +44,7 @@ generic map (
    ECC_BIT_RANGE => "7:0",         -- String
    ECC_MODE => "no_ecc",           -- String
    ECC_TYPE => "none",             -- String
-   MEMORY_INIT_FILE => "memory.mem",     -- String
+   MEMORY_INIT_FILE => "formatb.mem",     -- String
    MEMORY_INIT_PARAM => "",       -- String
    MEMORY_OPTIMIZATION => "true",  -- String
    MEMORY_PRIMITIVE => "auto",     -- String

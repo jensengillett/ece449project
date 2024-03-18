@@ -14,7 +14,6 @@ component control_path_v3 Port (
     out_port: out std_logic_vector(15 downto 0);
     in_port: in std_logic_vector(15 downto 0);
     in_enable: in std_logic;
-    loaded_value: in std_logic_vector(15 downto 0);
     in_clk: in std_logic;
     in_reg_reset: in std_logic
 );
@@ -24,7 +23,6 @@ signal pc : std_logic_vector(15 downto 0);
 signal out_port: std_logic_vector(15 downto 0);  
 signal in_port: std_logic_vector(15 downto 0);    
 signal in_enable: std_logic;                      
-signal loaded_value: std_logic_vector(15 downto 0);
 signal clk: std_logic;
 signal reg_rst: std_logic;
     
@@ -34,7 +32,6 @@ begin
         out_port => out_port,
         in_port => in_port,
         in_enable => in_enable,
-        loaded_value => loaded_value,
         in_clk => clk,
         in_reg_reset => reg_rst
     );
@@ -72,41 +69,19 @@ begin
                 in_port <= X"0000";
             when X"0004" => 
                 reg_rst <= '0';
-            when X"0010" =>
-                loaded_value <= X"4240";
                 in_enable <= '1';
                 in_port <= X"0001";
-            when X"0012" =>
-                loaded_value <= X"4280";
+            when X"0006" =>
                 in_enable <= '1';
                 in_port <= X"0003";
-            when X"0014" =>
-                loaded_value <= X"42C0";
+            when X"0008" =>
                 in_enable <= '1';
                 in_port <= X"0005";
-            when X"0016" =>
-                loaded_value <= X"0000";
+            when X"0010" =>
+                in_port <= X"0000";
                 in_enable <= '0';
-            when X"0018" => 
-                loaded_value <= X"0000";
-            when X"001A" =>
-                loaded_value <= X"0509";
-            when X"001C" =>
-                loaded_value <= X"0352";
-            when X"001E" =>
-                loaded_value <= X"039B";
-            when X"0020" =>
-                loaded_value <= X"0F00";
-            when X"0022" =>
-                loaded_value <= X"85F8";
-            when X"0024" =>
-                loaded_value <= X"030A";
-            when X"0026" =>
-                loaded_value <= X"0353";
-            when X"0028" =>
-                loaded_value <= X"038B";
             when others =>
-                loaded_value <= X"0000";
+                
                
         end case;
     end process;
