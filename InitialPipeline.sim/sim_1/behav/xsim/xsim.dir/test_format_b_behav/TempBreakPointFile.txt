@@ -1,4 +1,0 @@
-Breakpoint File Version 1.0
-78,true,"C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/ALU.vhd"
-79,true,"C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/ALU.vhd"
-80,true,"C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/ALU.vhd"
