@@ -1,2 +1,2 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/Jacob Laptop 2/.Xilinx/Projects/ece399_project/ece449project/InitialPipeline.srcs/sources_1/new/ALU.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'alu'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sim_1/new/test_format_a.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'test_format_a'

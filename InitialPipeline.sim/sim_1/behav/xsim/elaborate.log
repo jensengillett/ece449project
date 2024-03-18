@@ -1,7 +1,7 @@
-Vivado Simulator v2023.2
+Vivado Simulator v2023.2.1
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-Running: C:/Xilinx/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot test_format_b_behav xil_defaultlib.test_format_b -log elaborate.log 
+Running: C:/Xilinx/Vivado/2023.2/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L secureip -L xpm --snapshot test_format_a_behav xil_defaultlib.test_format_a -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Completed static elaboration
@@ -15,6 +15,8 @@ Compiling package ieee.numeric_std
 Compiling package ieee.std_logic_arith
 Compiling package ieee.std_logic_signed
 Compiling package ieee.std_logic_unsigned
+Compiling package xpm.vcomponents
+Compiling package vl.vl_types
 Compiling architecture behavioral of entity xil_defaultlib.alu [alu_default]
 Compiling architecture behavioural of entity xil_defaultlib.register_file [register_file_default]
 Compiling architecture behavioral of entity xil_defaultlib.decoder [decoder_default]
@@ -23,6 +25,14 @@ Compiling architecture behavioral of entity xil_defaultlib.if_id_latch [if_id_la
 Compiling architecture behavioral of entity xil_defaultlib.id_ex_latch [id_ex_latch_default]
 Compiling architecture behavioral of entity xil_defaultlib.ex_mem_latch [ex_mem_latch_default]
 Compiling architecture behavioral of entity xil_defaultlib.mem_wb_latch [mem_wb_latch_default]
+Compiling module xpm.xpm_memory_base(MEMORY_TYPE=3,ME...
+Compiling module xpm.xpm_memory_sprom(MEMORY_SIZE=102...
+Compiling package xpm.$unit_xpm_cdc_sv_220102727
+Compiling package xpm.axi_xil_sb_pkg_xpm_nsu
+Compiling package xpm.axi_data_integrity_checker_xpm_n...
+Compiling package xpm.xpm_axi_data_integrity_checker_n...
+Compiling package xpm.xpm_axi_xil_sb_pkg_nmu
+Compiling architecture behavioral of entity xil_defaultlib.rom [rom_default]
 Compiling architecture behavioral of entity xil_defaultlib.control_path_v3 [control_path_v3_default]
-Compiling architecture behavioral of entity xil_defaultlib.test_format_b
-Built simulation snapshot test_format_b_behav
+Compiling architecture behavioral of entity xil_defaultlib.test_format_a
+Built simulation snapshot test_format_a_behav
