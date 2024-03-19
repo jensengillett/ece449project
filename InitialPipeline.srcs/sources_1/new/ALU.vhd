@@ -22,21 +22,24 @@ entity alu is
         branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
         in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0);
-        flush_pipeline: out STD_LOGIC -- ALU signal to indicate that control path that a branch was taken
+        flush_pipeline: out STD_LOGIC; -- ALU signal to indicate that control path that a branch was taken
+        wb_register_in: in STD_LOGIC_VECTOR(2 downto 0); -- writeback op input to select R7 for BR.SUB and RETURN instructions
+        wb_register_out: out STD_LOGIC_VECTOR(2 downto 0);
+        reg_seven_in: in STD_LOGIC_VECTOR(15 downto 0)
     );
 end alu;
 
 -- Start architecture definition.
 architecture Behavioral of alu is 
 
-begin 
+begin
+ 
     process (clk)  -- define local inputs
     -- Set up some internal variables used for different operations.
     variable foo    :  STD_LOGIC_VECTOR(14 DOWNTO 0) := (others => '0');  -- 15-bit, all zeros (for testing against zero)
     variable result_17 : STD_LOGIC_VECTOR(16 DOWNTO 0) := (others => '0');  -- Used for ADD/SUB results
     variable result_32 : signed(31 DOWNTO 0) := (others => '0');  -- Used for MUL results
     variable temp_a, temp_b : signed(15 DOWNTO 0) := (others => '0');  -- Used for MUL operands
-    variable temp1, temp2 : std_logic_vector(17 downto 0) := (others => '0'); -- Used for branch operations
     begin -- Begin process
         flush_pipeline <= '0';
         if(rising_edge(clk) and alu_enable = '1') then  -- On each clock tick
@@ -54,60 +57,46 @@ begin
             if (branch_op(7) = '1') then -- take branch actions when required
                 case branch_op is
                     when "11000000" => -- BRR
-                        temp1:= std_logic_vector(2*signed(branch_displacement));
-                        temp2:= std_logic_vector(unsigned(signed(in_pc) + signed(temp1(15 DOWNTO 0))));
-                        out_pc <= '1' & temp2(15 DOWNTO 0);
+                        out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(in_pc)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
                         flush_pipeline <= '1';
                     
                     when "11000001" => -- BRR.N
                         if(negative = '1') then
-                            temp1:= std_logic_vector(2*signed(branch_displacement)); -- Converting 2*signed(branch_displacement) to logic vector is 18 bits long for some reason.
-                            -- Use a temp variable to store 18 bits then only take lower 16 for output
-                            temp2:= std_logic_vector(unsigned(signed(in_pc) + signed(temp1(15 DOWNTO 0))));
-                            out_pc <= '1' & temp2(15 DOWNTO 0);
+                            out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(in_pc)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
                             flush_pipeline <= '1';
                         end if;
                     
                     when "11000010" => -- BRR.Z
                         if (zero = '1') then
-                            temp1:= std_logic_vector(2*signed(branch_displacement)); -- Converting 2*signed(branch_displacement) to logic vector is 18 bits long for some reason.
-                            -- Use a temp variable to store 18 bits then only take lower 16 for output
-                            temp2:= std_logic_vector(unsigned(signed(in_pc) + signed(temp1)));
-                            out_pc <= '1' & temp2(15 DOWNTO 0);
-                            report(to_string(temp1));
-                            report(to_string(temp2));
-                            report(to_string(in_pc));
-                            report(to_string(out_pc));
+                            out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(in_pc)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
                             flush_pipeline <= '1';
                         end if;
                     
                     when "11000011" => -- BR
-                        temp1:= std_logic_vector(signed(a) + 2*signed(branch_displacement));
-                        temp2:= std_logic_vector(unsigned(signed(in_pc) + signed(temp1(15 DOWNTO 0))));
-                        out_pc <= '1' & temp2(15 DOWNTO 0);
+                        out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(a)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
                         flush_pipeline <= '1';
                     
                     when "11000100" => -- BR.N
                         if(negative = '1') then
-                            temp1:= std_logic_vector(signed(a) + 2*signed(branch_displacement));
-                            temp2:= std_logic_vector(unsigned(signed(in_pc) + signed(temp1(15 DOWNTO 0))));
-                            out_pc <= '1' & temp2(15 DOWNTO 0);
+                            out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(a)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
                             flush_pipeline <= '1';
-                        
                         end if;
                     
                     when "11000101" => -- BR.Z
-                        if(zero = '1') then
-                            temp1:= std_logic_vector(signed(a) + 2*signed(branch_displacement));
-                            temp2:= std_logic_vector(unsigned(signed(in_pc) + signed(temp1(15 DOWNTO 0))));
-                            out_pc <= '1' & temp2(15 DOWNTO 0);
+                        if (zero = '1') then
+                            out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(a)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
                             flush_pipeline <= '1';
-                        
                         end if;
                     
                     when "11000110" => -- BR.SUB
+                        result <= in_pc + 2;
+                        out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(a)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
+                        flush_pipeline <= '1';
                     
                     when "11000111" => -- RETURN
+                        out_pc <= '1' & reg_seven_in;
+                        flush_pipeline <= '1'; 
+                        
                     
                     when others =>
                 
@@ -190,6 +179,11 @@ begin
                             negative <= '0';
                         end if;
                 end case;
+            end if;
+            if (branch_op /= "11000110") then
+                wb_register_out <= wb_register_in;
+            else
+                wb_register_out <= "111";
             end if;          
         end if;
     end process;

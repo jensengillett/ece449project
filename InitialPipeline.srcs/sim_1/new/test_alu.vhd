@@ -22,7 +22,8 @@ component alu port(
     clk     : in    STD_LOGIC;
     negative, zero, overflow : out   STD_LOGIC;
     result, extra_16_bits  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
-    alu_enable : in STD_LOGIC
+    alu_enable : in STD_LOGIC;
+    wb_op : in STD_LOGIC
 );
 end component;
 
@@ -34,6 +35,7 @@ signal clk     : STD_LOGIC;
 signal negative, zero, overflow : STD_LOGIC;
 signal result, extra_16_bits  : STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal alu_enable : STD_LOGIC;
+signal wb_op : STD_LOGIC;
 
 begin
     -- Port map the internal signals to the ALU.
@@ -48,7 +50,8 @@ begin
         overflow => overflow, 
         result => result, 
         extra_16_bits => extra_16_bits,
-        alu_enable => alu_enable
+        alu_enable => alu_enable,
+        wb_op => wb_op
     );
     
     -- Clock process. This just clocks the ALU automatically every 10us.

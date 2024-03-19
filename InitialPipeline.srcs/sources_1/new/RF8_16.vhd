@@ -12,9 +12,10 @@ entity register_file is
         reg_enable: in std_logic;
         --read signals
         rd_index1: in std_logic_vector(2 downto 0); 
-        rd_index2: in std_logic_vector(2 downto 0); 
+        rd_index2: in std_logic_vector(2 downto 0);
         rd_data1: out std_logic_vector(15 downto 0); 
         rd_data2: out std_logic_vector(15 downto 0);
+        rd_data3: out std_logic_vector(15 downto 0);
         --write signals
         wr_index: in std_logic_vector(2 downto 0); 
         wr_data: in std_logic_vector(15 downto 0); 
@@ -106,6 +107,8 @@ begin
             reg_file(4) when(rd_index2="100") else
             reg_file(5) when(rd_index2="101") else
             reg_file(6) when(rd_index2="110") else reg_file(7);
+            
+            rd_data3 <=	 reg_file(7);
         --end if;
     --end process;
     

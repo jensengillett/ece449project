@@ -32,7 +32,10 @@ component alu
         branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
         in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0);
-        flush_pipeline: out STD_LOGIC
+        flush_pipeline: out STD_LOGIC;
+        wb_register_in : in STD_LOGIC_VECTOR(2 downto 0);
+        wb_register_out : out STD_LOGIC_VECTOR(2 downto 0);
+        reg_seven_in: in STD_LOGIC_VECTOR(15 downto 0)
     );
 end component;
 
@@ -45,6 +48,8 @@ signal alu_branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
 signal alu_in_pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal alu_out_pc: STD_LOGIC_VECTOR(16 DOWNTO 0);
 signal alu_flush_pipeline: STD_LOGIC;
+signal alu_wb_register_in, alu_wb_register_out: STD_LOGIC_VECTOR(2 downto 0);
+signal alu_reg_seven_in: STD_LOGIC_VECTOR(15 downto 0);
 
 component register_file port(
         rst : in std_logic; clk: in std_logic; reg_enable: in std_logic;
@@ -53,6 +58,7 @@ component register_file port(
         rd_index2: in std_logic_vector(2 downto 0); 
         rd_data1: out std_logic_vector(15 downto 0); 
         rd_data2: out std_logic_vector(15 downto 0);
+        rd_data3: out std_logic_vector(15 downto 0);
         --write signals
         wr_index: in std_logic_vector(2 downto 0); 
         wr_data: in std_logic_vector(15 downto 0); 
@@ -67,7 +73,7 @@ end component;
 
 signal reg_rst, reg_wr_enable, reg_out_enable, reg_in_enable: STD_LOGIC;
 signal reg_rd_index1, reg_rd_index2, reg_wr_index, reg_in_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
-signal reg_rd_data1, reg_rd_data2, reg_wr_data, reg_out_port, reg_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal reg_rd_data1, reg_rd_data2, reg_rd_data3, reg_wr_data, reg_out_port, reg_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 component decoder Port ( 
         clk: in STD_LOGIC;
@@ -138,6 +144,8 @@ component id_ex_latch Port(
         id_out_rd_data_1: out std_logic_vector(15 downto 0);
         id_in_rd_data_2: in std_logic_vector(15 downto 0);
         id_out_rd_data_2: out std_logic_vector(15 downto 0);
+        id_in_rd_data_3: in std_logic_vector(15 downto 0);
+        id_out_rd_data_3: out std_logic_vector(15 downto 0);
         id_in_alu_op: in std_logic_vector(2 downto 0);
         id_out_alu_op: out std_logic_vector(2 downto 0);
         id_in_mem_op: in std_logic_vector(1 downto 0);
@@ -162,6 +170,8 @@ signal id_in_rd_data_1: std_logic_vector(15 downto 0);
 signal id_out_rd_data_1: std_logic_vector(15 downto 0);
 signal id_in_rd_data_2: std_logic_vector(15 downto 0);
 signal id_out_rd_data_2: std_logic_vector(15 downto 0);
+signal id_in_rd_data_3: std_logic_vector(15 downto 0);
+signal id_out_rd_data_3: std_logic_vector(15 downto 0);
 signal id_in_alu_op: std_logic_vector(2 downto 0);
 signal id_out_alu_op: std_logic_vector(2 downto 0);
 signal id_in_mem_op: std_logic_vector(1 downto 0);
@@ -254,7 +264,10 @@ begin
         branch_displacement => alu_branch_displacement,
         in_pc => alu_in_pc,
         out_pc => alu_out_pc,
-        flush_pipeline => alu_flush_pipeline
+        flush_pipeline => alu_flush_pipeline,
+        wb_register_in => alu_wb_register_in,
+        wb_register_out => alu_wb_register_out,
+        reg_seven_in => alu_reg_seven_in
     );
     
     u_register: register_file port map(
@@ -265,6 +278,7 @@ begin
         rd_index2 => reg_rd_index2,
         rd_data1 => reg_rd_data1,
         rd_data2 => reg_rd_data2,
+        rd_data3 => reg_rd_data3,
         wr_index => reg_wr_index,
         wr_data => reg_wr_data,
         wr_enable => reg_wr_enable and en_regwrite,
@@ -327,7 +341,9 @@ begin
         id_in_rd_data_1    => id_in_rd_data_1,     
         id_out_rd_data_1   => id_out_rd_data_1,    
         id_in_rd_data_2    => id_in_rd_data_2,     
-        id_out_rd_data_2   => id_out_rd_data_2,    
+        id_out_rd_data_2   => id_out_rd_data_2,
+        id_in_rd_data_3    => id_in_rd_data_3,     
+        id_out_rd_data_3   => id_out_rd_data_3,    
         id_in_alu_op       => id_in_alu_op,        
         id_out_alu_op      => id_out_alu_op,       
         id_in_mem_op       => id_in_mem_op,        
@@ -419,6 +435,7 @@ begin
     
     id_in_rd_data_1 <= reg_rd_data1;
     id_in_rd_data_2 <= reg_rd_data2;
+    id_in_rd_data_3 <= reg_rd_data3;
     
     -- Execute
     -- 'Inputs'
@@ -429,13 +446,17 @@ begin
     alu_branch_op <= id_out_branch_op;
     alu_branch_displacement <= id_out_branch_displacement;
     alu_in_pc <= id_out_pc;
-    in_pc <= alu_out_pc; -- pass new PC value to PC unit, PC unit will determine whether to use it or not
+    alu_wb_register_in <= id_out_wb_register;
+    alu_reg_seven_in <= id_out_rd_data_3;
+    
+    
     -- 'Outputs'
     ex_in_alu_result <= alu_result;
+    in_pc <= alu_out_pc; -- pass new PC value to PC unit, PC unit will determine whether to use it or not
+    ex_in_wb_register <= alu_wb_register_out; -- WB op passes through alu, is modified on BR.SUB instruction
     -- Negative, Zero, Overflow, and extra_16_bits should be added later.
     ex_in_mem_op <= id_out_mem_op;
     ex_in_wb_op <= id_out_wb_op;
-    ex_in_wb_register <= id_out_wb_register;
     
     -- Memory
     -- 'Inputs'

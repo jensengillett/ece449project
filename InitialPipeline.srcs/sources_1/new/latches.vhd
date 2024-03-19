@@ -58,6 +58,8 @@ entity id_ex_latch is
         id_out_rd_data_1: out std_logic_vector(15 downto 0);
         id_in_rd_data_2: in std_logic_vector(15 downto 0);
         id_out_rd_data_2: out std_logic_vector(15 downto 0);
+        id_in_rd_data_3: in std_logic_vector(15 downto 0);
+        id_out_rd_data_3: out std_logic_vector(15 downto 0);
         id_in_alu_op: in std_logic_vector(2 downto 0);
         id_out_alu_op: out std_logic_vector(2 downto 0);
         id_in_mem_op: in std_logic_vector(1 downto 0);
@@ -83,6 +85,7 @@ begin
         if(falling_edge(clk)) then
             id_out_rd_data_1 <= id_in_rd_data_1;
             id_out_rd_data_2 <= id_in_rd_data_2;
+            id_out_rd_data_3 <= id_in_rd_data_3;
             id_out_alu_op <= id_in_alu_op;
             id_out_cl_value <= id_in_cl_value;
             id_out_branch_op <= id_in_branch_op;
