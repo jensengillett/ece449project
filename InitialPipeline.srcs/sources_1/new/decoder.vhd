@@ -10,7 +10,7 @@ entity decoder is
         decode_enable : in STD_LOGIC;
         instruction: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         alu_op: out STD_LOGIC_VECTOR(2 DOWNTO 0);
-        mem_op: out STD_LOGIC_VECTOR(1 DOWNTO 0);
+        mem_op: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         wb_op: out STD_LOGIC;
         read_1_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);
         read_2_select: out STD_LOGIC_VECTOR(2 DOWNTO 0);

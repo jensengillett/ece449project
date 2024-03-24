@@ -140,8 +140,8 @@ begin
        ADDR_WIDTH_B => 16,               -- DECIMAL
        BYTE_WRITE_WIDTH_A => 16,        -- DECIMAL
        CLOCKING_MODE => "common_clock", -- String
-       MEMORY_INIT_FILE => "none",      -- String
-       MEMORY_INIT_PARAM => "0",        -- String
+       MEMORY_INIT_FILE => "formata.mem",      -- String
+       MEMORY_INIT_PARAM => "",        -- String
        MEMORY_OPTIMIZATION => "true",   -- String
        MEMORY_SIZE => 8192,             -- DECIMAL
        MESSAGE_CONTROL => 0,            -- DECIMAL
@@ -216,7 +216,13 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity memory_unit is
     port(
-        in_mem_op: in std_logic_vector(1 downto 0);
+        in_mem_op: in std_logic_vector(2 downto 0);
+        in_src_data: in std_logic_vector(15 downto 0);
+        in_dest_data: in std_logic_vector(15 downto 0);
+        -- out_dest_reg: out std_logic_vector(2 downto 0);  -- provided by decoder
+        out_dest_data: out std_logic_vector(15 downto 0);
+        in_m1: in std_logic;
+        in_imm: in std_logic_vector(7 downto 0);
         enable_mem: in std_logic;
         clk: in std_logic
     );
@@ -255,5 +261,10 @@ begin
         in_write_a => in_write_a
     );
     
-    
+    -- Memory operations chart:
+    -- 000: NOP (unit does nothing) - we don't want to affect memory when we don't mean to.
+    -- 001: LOAD - load from memory location at in_src_data, write value to out_dest_data
+    -- 010: STORE - read data from in_src_data, store value to memory location at in_dest_data
+    -- 011: LOADIMM - if in_m1=1, write in_imm to R7<15 downto 8> else write in_imm to R7<7 downto 0>
+    -- 100: MOV - read data from in_src_data, write value to out_dest_data
 end Behavioral;

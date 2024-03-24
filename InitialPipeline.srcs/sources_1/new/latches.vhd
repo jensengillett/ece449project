@@ -62,8 +62,8 @@ entity id_ex_latch is
         id_out_rd_data_3: out std_logic_vector(15 downto 0);
         id_in_alu_op: in std_logic_vector(2 downto 0);
         id_out_alu_op: out std_logic_vector(2 downto 0);
-        id_in_mem_op: in std_logic_vector(1 downto 0);
-        id_out_mem_op: out std_logic_vector(1 downto 0);
+        id_in_mem_op: in std_logic_vector(2 downto 0);
+        id_out_mem_op: out std_logic_vector(2 downto 0);
         id_in_wb_op: in std_logic;
         id_out_wb_op: out std_logic;
         id_in_cl_value: in std_logic_vector(3 downto 0);
@@ -109,8 +109,8 @@ entity ex_mem_latch is
         clk: in std_logic;
         ex_in_alu_result: in std_logic_vector(15 downto 0);
         ex_out_alu_result: out std_logic_vector(15 downto 0);
-        ex_in_mem_op: in std_logic_vector(1 downto 0);
-        ex_out_mem_op: out std_logic_vector(1 downto 0);
+        ex_in_mem_op: in std_logic_vector(2 downto 0);
+        ex_out_mem_op: out std_logic_vector(2 downto 0);
         ex_in_wb_op: in std_logic;
         ex_out_wb_op: out std_logic;
         ex_in_wb_register : in std_logic_vector(2 downto 0);

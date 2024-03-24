@@ -16,13 +16,13 @@ component pc_unit Port (
         in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_pc_reset: in STD_LOGIC;
         out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0);
-        in_pc_enable: in STD_LOGIC;
+        in_en_pc: in STD_LOGIC;
      );
 end component;
 
 signal clk: STD_LOGIC;
 signal in_pc, out_pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
-signal in_pc_reset, in_pc_enable: STD_LOGIC;
+signal in_pc_reset, in_en_pc: STD_LOGIC;
 
 begin
     u_pc: pc_unit port map(
@@ -30,7 +30,7 @@ begin
         in_pc => in_pc,
         in_pc_reset => in_pc_reset,
         out_pc => out_pc,
-        in_pc_enable => in_pc_enable
+        in_en_pc => in_en_pc
     );
     
     process begin
@@ -39,7 +39,7 @@ begin
     end process;
     
     process begin
-        in_pc <= (others => '0'); in_pc_reset <= '1'; in_pc_enable <= '1';
+        in_pc <= (others => '0'); in_pc_reset <= '1'; in_en_pc <= '1';
         wait until (clk = '0' and clk'event); wait until (clk = '1' and clk'event); wait until (clk='1' and clk'event);
         in_pc_reset <= '0'; 
         while(true) loop
