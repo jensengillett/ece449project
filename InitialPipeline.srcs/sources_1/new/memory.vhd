@@ -44,7 +44,7 @@ begin
        ECC_BIT_RANGE => "7:0",         -- String
        ECC_MODE => "no_ecc",           -- String
        ECC_TYPE => "none",             -- String
-       MEMORY_INIT_FILE => "formatb.mem",     -- String
+       MEMORY_INIT_FILE => "formatb_testing.mem",     -- String
        MEMORY_INIT_PARAM => "",       -- String
        MEMORY_OPTIMIZATION => "true",  -- String
        MEMORY_PRIMITIVE => "auto",     -- String
@@ -254,4 +254,6 @@ begin
         enable => enable_mem,
         in_write_a => in_write_a
     );
+    
+    
 end Behavioral;
