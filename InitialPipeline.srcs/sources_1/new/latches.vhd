@@ -75,7 +75,11 @@ entity id_ex_latch is
         id_in_branch_displacement : in std_logic_vector(8 downto 0); 
         id_out_branch_displacement : out std_logic_vector(8 downto 0);
         id_in_pc : in std_logic_vector(15 downto 0);
-        id_out_pc : out std_logic_vector(15 downto 0)
+        id_out_pc : out std_logic_vector(15 downto 0);
+        id_in_m1: in std_logic;
+        id_out_m1: out std_logic;
+        id_in_imm: in std_logic_vector(7 downto 0);
+        id_out_imm: out std_logic_vector(7 downto 0)
     );
 end id_ex_latch;
 
@@ -94,6 +98,8 @@ begin
             id_out_wb_op <= id_in_wb_op;
             id_out_wb_register <= id_in_wb_register;
             id_out_pc <= id_in_pc;
+            id_out_m1 <= id_in_m1;
+            id_out_imm <= id_in_imm;
         end if;
     end process;
 end Behavioral;
@@ -114,7 +120,11 @@ entity ex_mem_latch is
         ex_in_wb_op: in std_logic;
         ex_out_wb_op: out std_logic;
         ex_in_wb_register : in std_logic_vector(2 downto 0);
-        ex_out_wb_register : out std_logic_vector(2 downto 0)
+        ex_out_wb_register : out std_logic_vector(2 downto 0);
+        ex_in_m1: in std_logic;
+        ex_out_m1: out std_logic;
+        ex_in_imm: in std_logic_vector(7 downto 0);
+        ex_out_imm: out std_logic_vector(7 downto 0)
     );
 end ex_mem_latch;
 
@@ -126,6 +136,8 @@ begin
             ex_out_mem_op <= ex_in_mem_op;
             ex_out_wb_op <= ex_in_wb_op;
             ex_out_wb_register <= ex_in_wb_register;
+            ex_out_m1 <= ex_in_m1;
+            ex_out_imm <= ex_in_imm;
         end if;
     end process;
 end Behavioral;
@@ -141,6 +153,12 @@ entity mem_wb_latch is
         clk: in std_logic;
         mem_in_alu_result: in std_logic_vector(15 downto 0);
         mem_out_alu_result: out std_logic_vector(15 downto 0);
+        mem_in_alu_result_en: in std_logic;
+        mem_out_alu_result_en: out std_logic;
+        mem_in_mem_load: in std_logic_vector(15 downto 0);
+        mem_out_mem_load: out std_logic_vector(15 downto 0);
+        mem_in_mem_load_en: in std_logic;
+        mem_out_mem_load_en: out std_logic;
         mem_in_wb_op: in std_logic;
         mem_out_wb_op: out std_logic;
         mem_in_wb_register : in std_logic_vector(2 downto 0);
@@ -155,6 +173,9 @@ begin
             mem_out_alu_result <= mem_in_alu_result;
             mem_out_wb_op <= mem_in_wb_op;
             mem_out_wb_register <= mem_in_wb_register;
+            mem_out_alu_result_en <= mem_in_alu_result_en;
+            mem_out_mem_load <= mem_in_mem_load;
+            mem_out_mem_load_en <= mem_in_mem_load_en;
         end if;
     end process;
 end Behavioral;

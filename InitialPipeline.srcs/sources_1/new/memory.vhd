@@ -262,9 +262,9 @@ begin
     );
     
     -- Memory operations chart:
-    -- 000: NOP (unit does nothing) - we don't want to affect memory when we don't mean to.
-    -- 001: LOAD - load from memory location at in_src_data, write value to out_dest_data
-    -- 010: STORE - read data from in_src_data, store value to memory location at in_dest_data
-    -- 011: LOADIMM - if in_m1=1, write in_imm to R7<15 downto 8> else write in_imm to R7<7 downto 0>
-    -- 100: MOV - read data from in_src_data, write value to out_dest_data
+    -- 000: LOAD - load from memory location at in_src_data, write value to out_dest_data
+    -- 001: STORE - read data from in_src_data, store value to memory location at in_dest_data
+    -- 010: LOADIMM - if in_m1=1, write in_imm to R7<15 downto 8> else write in_imm to R7<7 downto 0>
+    -- 011: MOV - read data from in_src_data, write value to out_dest_data
+    -- 100 - 111: NOP (unit does nothing) - we don't want to affect memory when we don't mean to.
 end Behavioral;

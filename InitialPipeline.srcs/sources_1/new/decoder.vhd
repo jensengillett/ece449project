@@ -25,7 +25,9 @@ entity decoder is
         out_in_enable: out STD_LOGIC;
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
-        out_enable: out STD_LOGIC
+        out_enable: out STD_LOGIC;
+        out_m1: out STD_LOGIC;
+        out_imm: out STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 end decoder;
 
@@ -34,22 +36,36 @@ architecture Behavioral of decoder is
 begin
     process(clk) begin
         if(rising_edge(clk) and decode_enable = '1') then  -- Decode always occurs on rising edge.
-            -- Move ra (output register) into between-stage storage.
-            -- Thankfully, output (writeback) is always to ra, so we can just hardcode it.
-            write_select <= instruction(8 DOWNTO 6);
-            branch_op(7) <= '0'; -- branch disabled at the start of each cycle.
+            -- For every non-LOADIMM instruction, ra is used as the output.
+            -- Special case LOADIMM which writes to r7 always.
+            if(instruction(15 DOWNTO 9) = "0010010") then
+                write_select <= "111";
+            else
+                write_select <= instruction(8 DOWNTO 6);
+            end if;
+            
+            -- branch disabled at the start of each cycle.
+            branch_op(7) <= '0'; 
             -- This could be removed if there is a guarantee that all instructions will have MSB = 0
             -- i.e. not have any opcodes > 127
         
             -- Determine which registers get loaded into the register file dependant on opcode
-            -- This is required because for _some reason_ there's inconsistency on which registers are read from.
-            -- Some instructions read from rb and rc, while others read from ra.
+            -- Some instructions read from rb and rc, while others read from ra, and LOADIMM reads from... r7.
             -- Thus we need to actually check so that we make sure to read the right data from the register file.
             if(instruction(15 DOWNTO 9) < "0000101") then   -- ADD, SUB, MUL, and NAND all read from rb and rc
                 read_1_select <= instruction(5 DOWNTO 3);
                 read_2_select <= instruction(2 DOWNTO 0);
-            elsif(instruction(15 DOWNTO 9) >= "0000101" and instruction(15 DOWNTO 9) < "0100001") then  -- SHL, SHR, TEST, and OUT all read from ra
+            elsif((instruction(15 DOWNTO 9) >= "0000101" and instruction(15 DOWNTO 9) <= "0000111") or instruction(15 downto 9) = "0010000" or instruction(15 downto 9) = "0010001") then  -- SHL, SHR, TEST, and OUT all read from ra
                 read_1_select <= instruction(8 DOWNTO 6);
+                read_2_select <= "000";
+            elsif(instruction(15 downto 9) = "0001000" or instruction(15 downto 9) = "0001011") then  -- LOAD and MOV read from r.src
+                read_1_select <= instruction(5 downto 3);
+                read_2_select <= "000";
+            elsif(instruction(15 downto 9) = "0001001") then -- STORE needs to read both r.src and r.dest
+                read_1_select <= instruction(5 downto 3);
+                read_2_select <= instruction(8 downto 6);
+            elsif(instruction(15 downto 9) = "0001010") then -- LOADIMM needs r7 specifically
+                read_1_select <= "111";
                 read_2_select <= "000";
             end if;
             
@@ -67,8 +83,22 @@ begin
                 alu_op <= "000";
             end if;
             
-            -- If this is a memory operation, we pass along the mem_opr flag.
-            -- TODO: Format L instructions require this. Implement later!
+            -- If this is a memory operation, we pass along the mem_opr flag. m1 and imm are required for loadimm.
+            -- NOP is '111' to simplify things.
+            if(instruction(15 downto 9) >= "0001000" and instruction(15 downto 9) <= "0001011")then
+                mem_op <= instruction(11 downto 9);
+            else
+                mem_op <= "111";
+            end if;
+            
+            -- Set up m1 and imm for LOADIMM.
+            if(instruction(15 downto 9) = "0001010") then
+                out_m1 <= instruction(8);
+                out_imm <= instruction(7 downto 0);
+            else
+                out_m1 <= '0';
+                out_imm <= "00000000";
+            end if;
             
             -- If this instruction writes data back to the register file, pass along the write flag.
             -- Writeback is enabled on format A instructions between 1 and 6.
@@ -76,6 +106,8 @@ begin
                 wb_op <= '1';
             --elsif (instruction(15 DOWNTO 9) = "0100001") then  -- 'IN'
                 --wb_op <= '1';
+            elsif(instruction(15 downto 9) >= "0001000" and instruction(15 downto 9) <= "0001011" and instruction(15 downto 9) /= "0001001") then  -- LOAD, LOADIMM, MOV
+                wb_op <= '1';
             else
                 wb_op <= '0';
             end if;
