@@ -147,8 +147,8 @@ begin
        MESSAGE_CONTROL => 0,            -- DECIMAL
        READ_DATA_WIDTH_A => 16,         -- DECIMAL
        READ_DATA_WIDTH_B => 16,         -- DECIMAL
-       READ_LATENCY_A => 0,             -- DECIMAL
-       READ_LATENCY_B => 0,             -- DECIMAL
+       READ_LATENCY_A => 0,             -- DECIMAL  -- Does this actually work? Who knows?
+       READ_LATENCY_B => 0,             -- DECIMAL  -- Find out on the next episode of Dragon Ball Z
        READ_RESET_VALUE_A => "0",       -- String
        READ_RESET_VALUE_B => "0",       -- String
        RST_MODE_A => "SYNC",            -- String
@@ -219,8 +219,8 @@ entity memory_unit is
         in_mem_op: in std_logic_vector(2 downto 0);
         in_src_data: in std_logic_vector(15 downto 0);
         in_dest_data: in std_logic_vector(15 downto 0);
-        -- out_dest_reg: out std_logic_vector(2 downto 0);  -- provided by decoder
         out_dest_data: out std_logic_vector(15 downto 0);
+        out_enable: out std_logic;
         in_m1: in std_logic;
         in_imm: in std_logic_vector(7 downto 0);
         enable_mem: in std_logic;

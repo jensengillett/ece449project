@@ -15,6 +15,7 @@ entity alu is
         clk     : in    STD_LOGIC;
         negative, zero, overflow : inout   STD_LOGIC;
         result  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
+        result_enable : out STD_LOGIC;
         extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0);
         alu_enable: in  STD_LOGIC;
         -- Data for branching
@@ -44,6 +45,7 @@ begin
         flush_pipeline <= '0';
         if(rising_edge(clk) and alu_enable = '1') then  -- On each clock tick
             result <= (others => '0'); -- reset result signal
+            result_enable <= '0';  -- reset result enable signal
             
             extra_16_bits <= (others => '0');  -- reset MUL extra bits
             -- negative <= '0'; zero <= '0'; overflow <= '0';  -- reset flags
@@ -90,6 +92,7 @@ begin
                     
                     when "11000110" => -- BR.SUB
                         result <= in_pc + 2;
+                        result_enable <= '1';
                         out_pc <= '1' & std_logic_vector(to_signed(to_integer(unsigned(a)) + 2*TO_INTEGER(signed(branch_displacement)), 16));
                         flush_pipeline <= '1';
                     
@@ -112,11 +115,13 @@ begin
                         -- Perform signed addition. We sign-extend a and b beforehand to get the correct 17-bit result with overflow.
                         result_17 := std_logic_vector(signed(a(15) & a) + signed(b(15) & b));  
                         result <= result_17(15 DOWNTO 0);  -- Store the 16-bit true result.
+                        result_enable <= '1';
                         overflow <= result_17(16);  -- Store overflow bit.
                     when "010" =>  -- SUB
                         -- Perform signed subtraction. See addition above.
                         result_17 := std_logic_vector(signed(a(15) & a) - signed(b(15) & b)); 
                         result <= result_17(15 DOWNTO 0);
+                        result_enable <= '1';
                         -- Overflow bit is set consistently wrong if one operand (but not both) is negative; this if/else fixes the overflow bit.
                         if((a(15) = '1' and b(15) = '0') or (a(15) = '0' and b(15) = '1')) then
                             overflow <= not result_17(16);
@@ -155,16 +160,20 @@ begin
                             result <= std_logic_vector(result_32(31) & result_32(14 DOWNTO 0));
                             overflow <= '0';
                         end if;
+                        result_enable <= '1';
                     when "100" =>  -- NAND
                         result <= a NAND b;  
                         overflow <= '0';
+                        result_enable <= '1';
                     when "101" =>  -- SHL (Shift Left)
                         -- Both SHL and SHR use the built-in NUMERIC_STD operators, but they require type conversion of a and cl to unsigned and integer, respectively.
                         result <= std_logic_vector(shift_left(unsigned(a), to_integer(unsigned(cl))));
                         overflow <= '0';
+                        result_enable <= '1';
                     when "110" =>  -- SHR (Shift Right)
                         result <= std_logic_vector(shift_right(unsigned(a), to_integer(unsigned(cl))));
                         overflow <= '0';
+                        result_enable <= '1';
                     when others =>  -- TEST
                         -- test for zero                    
                         if(a(14 DOWNTO 0) = foo) then

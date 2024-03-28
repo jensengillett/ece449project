@@ -18,7 +18,6 @@ entity decoder is
         cl_value: out STD_LOGIC_VECTOR(3 DOWNTO 0);  -- for SHL and SHR
         branch_op: out STD_LOGIC_VECTOR(7 DOWNTO 0);
         branch_displacement: out STD_LOGIC_VECTOR(8 DOWNTO 0);
-        -- TEMP FOR PRELIMINARY DESIGN REVIEW
         in_in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         out_in_port: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_in_enable: in STD_LOGIC;
@@ -45,13 +44,15 @@ begin
             end if;
             
             -- branch disabled at the start of each cycle.
-            branch_op(7) <= '0'; 
+            -- branch_op(7) <= '0';   -- below condition is true
             -- This could be removed if there is a guarantee that all instructions will have MSB = 0
             -- i.e. not have any opcodes > 127
         
             -- Determine which registers get loaded into the register file dependant on opcode
             -- Some instructions read from rb and rc, while others read from ra, and LOADIMM reads from... r7.
             -- Thus we need to actually check so that we make sure to read the right data from the register file.
+            -- Notably, this doesn't turn off the register file when a register isn't used - it just uses r0 as a default.
+            -- There shouldn't be any problems with this. Probably.
             if(instruction(15 DOWNTO 9) < "0000101") then   -- ADD, SUB, MUL, and NAND all read from rb and rc
                 read_1_select <= instruction(5 DOWNTO 3);
                 read_2_select <= instruction(2 DOWNTO 0);
@@ -65,7 +66,10 @@ begin
                 read_1_select <= instruction(5 downto 3);
                 read_2_select <= instruction(8 downto 6);
             elsif(instruction(15 downto 9) = "0001010") then -- LOADIMM needs r7 specifically
-                read_1_select <= "111";
+                read_1_select <= "111";  -- 7
+                read_2_select <= "000";
+            else  -- failsafe
+                read_1_select <= "000";
                 read_2_select <= "000";
             end if;
             
@@ -79,15 +83,15 @@ begin
             -- Pass ALU mode to the ALU dependant on opcode.
             if(instruction(15 DOWNTO 9) < "0001000") then  -- ALU opcodes are from 0 to 7
                 alu_op <= instruction(11 DOWNTO 9);  -- low three bits of opcode determine ALU operator
-            else
+            else  -- failsafe: nop the alu
                 alu_op <= "000";
             end if;
             
-            -- If this is a memory operation, we pass along the mem_opr flag. m1 and imm are required for loadimm.
-            -- NOP is '111' to simplify things.
+            -- If this is a memory operation, we pass along the mem_opr flag.
+            -- NOP is any instruction from 100 to 111 to simplify things. We default to 111.
             if(instruction(15 downto 9) >= "0001000" and instruction(15 downto 9) <= "0001011")then
                 mem_op <= instruction(11 downto 9);
-            else
+            else  -- failsafe: nop the memory unit
                 mem_op <= "111";
             end if;
             
@@ -101,14 +105,14 @@ begin
             end if;
             
             -- If this instruction writes data back to the register file, pass along the write flag.
-            -- Writeback is enabled on format A instructions between 1 and 6.
+            -- Writeback is enabled on format A instructions between 1 (ADD) and 6 (SHR).
             if((instruction(15 DOWNTO 9) > "0000000") and (instruction(15 DOWNTO 9) < "0000111")) then
                 wb_op <= '1';
-            --elsif (instruction(15 DOWNTO 9) = "0100001") then  -- 'IN'
+            --elsif (instruction(15 DOWNTO 9) = "0100001") then  -- 'IN' no longer uses writeback, and instead uses an in-enable.
                 --wb_op <= '1';
             elsif(instruction(15 downto 9) >= "0001000" and instruction(15 downto 9) <= "0001011" and instruction(15 downto 9) /= "0001001") then  -- LOAD, LOADIMM, MOV
                 wb_op <= '1';
-            else
+            else  -- failsafe
                 wb_op <= '0';
             end if;
             
@@ -138,20 +142,23 @@ begin
                 branch_op <= ("1" & instruction(15 DOWNTO 9));    
                 branch_displacement <= (others => '0');
                  
-            else
+            else  -- failsafe
                 
                 branch_op <= (others => '0');
                         
             end if;
             
             -- If this is an OUT instruction, tell the register file to read the data.
-            -- TEMPORARY FOR PRELIMINARY DESIGN REVIEW
+            -- OUT is not used past Format B.
             if(instruction(15 DOWNTO 9) = "0100000") then
                 out_enable <= '1';
             else
                 out_enable <= '0';
             end if;
-        elsif(falling_edge(clk) and decode_enable = '1') then  -- Latch for input port.
+        elsif(falling_edge(clk) and decode_enable = '1') then  -- Latch for input port. 
+            -- This _could_ have been put into it's own latch component, but to simplify some of the other logic
+            -- and avoid adding _another_ latch component, it's instead part of the decoder. This sets up the
+            -- input port properly and decodes the index to put the data into.
             if(instruction(15 DOWNTO 9) = "0100001") then
                 in_port_index <= instruction(8 DOWNTO 6);
             else

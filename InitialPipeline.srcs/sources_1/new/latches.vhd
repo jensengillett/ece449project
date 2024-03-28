@@ -124,7 +124,13 @@ entity ex_mem_latch is
         ex_in_m1: in std_logic;
         ex_out_m1: out std_logic;
         ex_in_imm: in std_logic_vector(7 downto 0);
-        ex_out_imm: out std_logic_vector(7 downto 0)
+        ex_out_imm: out std_logic_vector(7 downto 0);
+        ex_in_alu_result_enable: in std_logic;
+        ex_out_alu_result_enable: out std_logic;
+        ex_in_rd_data_1: in std_logic_vector(15 downto 0);
+        ex_out_rd_data_1: out std_logic_vector(15 downto 0);
+        ex_in_rd_data_2: in std_logic_vector(15 downto 0);
+        ex_out_rd_data_2: out std_logic_vector(15 downto 0)
     );
 end ex_mem_latch;
 
@@ -138,6 +144,9 @@ begin
             ex_out_wb_register <= ex_in_wb_register;
             ex_out_m1 <= ex_in_m1;
             ex_out_imm <= ex_in_imm;
+            ex_out_alu_result_enable <= ex_in_alu_result_enable;
+            ex_out_rd_data_1 <= ex_in_rd_data_1;
+            ex_out_rd_data_2 <= ex_in_rd_data_2;
         end if;
     end process;
 end Behavioral;
