@@ -263,15 +263,15 @@ signal mem_in_alu_result_en, mem_out_alu_result_en: std_logic;
 signal mem_in_mem_load, mem_out_mem_load: std_logic_vector(15 downto 0);
 signal mem_in_mem_load_en, mem_out_mem_load_en: std_logic;
 
-component rom Port ( 
-        data_out: out std_logic_vector(15 downto 0);
-        address: in std_logic_vector(7 downto 0);
-        clk: in std_logic
-    );
-end component;
+--component rom Port ( 
+--        data_out: out std_logic_vector(15 downto 0);
+--        address: in std_logic_vector(7 downto 0);
+--        clk: in std_logic
+--    );
+--end component;
 
-signal rom_data_out: std_logic_vector(15 downto 0);
-signal rom_address: std_logic_vector(7 downto 0);
+--signal rom_data_out: std_logic_vector(15 downto 0);
+--signal rom_address: std_logic_vector(7 downto 0);
 
 component memory_unit port(
         in_mem_op: in std_logic_vector(2 downto 0);
@@ -471,11 +471,11 @@ begin
         mem_enable_latch => en_mem_latch
     );
     
-    u_rom: rom port map(
-        clk => clk,
-        data_out => rom_data_out,
-        address => rom_address
-    );
+    --u_rom: rom port map(
+    --    clk => clk,
+    --    data_out => rom_data_out,
+    --    address => rom_address
+    --);
     
     u_mem_unit: memory_unit port map(
         clk => clk,

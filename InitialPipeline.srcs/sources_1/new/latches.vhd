@@ -81,7 +81,7 @@ entity id_ex_latch is
         id_out_m1: out std_logic;
         id_in_imm: in std_logic_vector(7 downto 0);
         id_out_imm: out std_logic_vector(7 downto 0);
-        id_enable_latch: in std_logic;
+        id_enable_latch: in std_logic
     );
 end id_ex_latch;
 

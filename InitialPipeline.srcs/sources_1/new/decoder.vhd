@@ -56,16 +56,16 @@ begin
             if(instruction(15 DOWNTO 9) < "0000101") then   -- ADD, SUB, MUL, and NAND all read from rb and rc
                 read_1_select <= instruction(5 DOWNTO 3);
                 read_2_select <= instruction(2 DOWNTO 0);
-            elsif((instruction(15 DOWNTO 9) >= "0000101" and instruction(15 DOWNTO 9) <= "0000111") or instruction(15 downto 9) = "0010000" or instruction(15 downto 9) = "0010001") then  -- SHL, SHR, TEST, and OUT all read from ra
+            elsif((instruction(15 DOWNTO 9) >= "0000101" and instruction(15 DOWNTO 9) <= "0000111") or instruction(15 downto 9) = "0100000" or instruction(15 downto 9) = "0100001") then  -- SHL, SHR, TEST, and OUT all read from ra
                 read_1_select <= instruction(8 DOWNTO 6);
                 read_2_select <= "000";
-            elsif(instruction(15 downto 9) = "0001000" or instruction(15 downto 9) = "0001011") then  -- LOAD and MOV read from r.src
+            elsif(instruction(15 downto 9) = "0010000" or instruction(15 downto 9) = "0010011") then  -- LOAD and MOV read from r.src
                 read_1_select <= instruction(5 downto 3);
                 read_2_select <= "000";
-            elsif(instruction(15 downto 9) = "0001001") then -- STORE needs to read both r.src and r.dest
+            elsif(instruction(15 downto 9) = "0010001") then -- STORE needs to read both r.src and r.dest
                 read_1_select <= instruction(5 downto 3);
                 read_2_select <= instruction(8 downto 6);
-            elsif(instruction(15 downto 9) = "0001010") then -- LOADIMM needs r7 specifically
+            elsif(instruction(15 downto 9) = "0010010") then -- LOADIMM needs r7 specifically
                 read_1_select <= "111";  -- 7
                 read_2_select <= "000";
             else  -- failsafe
@@ -89,14 +89,14 @@ begin
             
             -- If this is a memory operation, we pass along the mem_opr flag.
             -- NOP is any instruction from 100 to 111 to simplify things. We default to 111.
-            if(instruction(15 downto 9) >= "0001000" and instruction(15 downto 9) <= "0001011")then
+            if(instruction(15 downto 9) >= "0010000" and instruction(15 downto 9) <= "0010011")then
                 mem_op <= instruction(11 downto 9);
             else  -- failsafe: nop the memory unit
                 mem_op <= "111";
             end if;
             
             -- Set up m1 and imm for LOADIMM.
-            if(instruction(15 downto 9) = "0001010") then
+            if(instruction(15 downto 9) = "0010010") then
                 out_m1 <= instruction(8);
                 out_imm <= instruction(7 downto 0);
             else
@@ -110,7 +110,7 @@ begin
                 wb_op <= '1';
             --elsif (instruction(15 DOWNTO 9) = "0100001") then  -- 'IN' no longer uses writeback, and instead uses an in-enable.
                 --wb_op <= '1';
-            elsif(instruction(15 downto 9) >= "0001000" and instruction(15 downto 9) <= "0001011" and instruction(15 downto 9) /= "0001001") then  -- LOAD, LOADIMM, MOV
+            elsif(instruction(15 downto 9) >= "0010000" and instruction(15 downto 9) <= "0010011" and instruction(15 downto 9) /= "0010001") then  -- LOAD, LOADIMM, MOV
                 wb_op <= '1';
             else  -- failsafe
                 wb_op <= '0';

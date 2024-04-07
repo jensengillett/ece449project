@@ -9,8 +9,8 @@ use xpm.vcomponents.all;
 
 entity rom is
     Port ( 
-        data_out: out std_logic_vector(15 downto 0);
-        address: in std_logic_vector(7 downto 0);
+        rom_data_out: out std_logic_vector(15 downto 0);
+        address: in std_logic_vector(15 downto 0);
         clk: in std_logic
     );
 end rom;
@@ -21,7 +21,7 @@ architecture Behavioral of rom is
 signal dbiterra: std_logic;
 signal douta: std_logic_vector(15 downto 0);
 signal sbiterra: std_logic;
-signal addra: std_logic_vector(7 downto 0);
+signal addra: std_logic_vector(15 downto 0);
 signal clka: std_logic;
 signal ena: std_logic;
 signal injectdbiterra: std_logic;
@@ -38,17 +38,17 @@ begin
     
     xpm_memory_sprom_inst : xpm_memory_sprom
     generic map (
-       ADDR_WIDTH_A => 8,              -- DECIMAL
+       ADDR_WIDTH_A => 16,              -- DECIMAL
        AUTO_SLEEP_TIME => 0,           -- DECIMAL
        CASCADE_HEIGHT => 0,            -- DECIMAL
        ECC_BIT_RANGE => "7:0",         -- String
        ECC_MODE => "no_ecc",           -- String
        ECC_TYPE => "none",             -- String
-       MEMORY_INIT_FILE => "formatb_testing.mem",     -- String
+       MEMORY_INIT_FILE => "jumptoram.mem",     -- String
        MEMORY_INIT_PARAM => "",       -- String
        MEMORY_OPTIMIZATION => "true",  -- String
        MEMORY_PRIMITIVE => "auto",     -- String
-       MEMORY_SIZE => 1024,            -- DECIMAL
+       MEMORY_SIZE => 16384,            -- DECIMAL
        MESSAGE_CONTROL => 0,           -- DECIMAL
        RAM_DECOMP => "auto",           -- String
        READ_DATA_WIDTH_A => 16,        -- DECIMAL
@@ -82,7 +82,7 @@ begin
     
     -- Pass the correct signals and values into the XPM_MEMORY_SPROM component.
     ena <= '1';
-    data_out <= douta;
+    rom_data_out <= douta;
     addra <= address;
     clka <= clk;
     injectdbiterra <= '0';
@@ -140,10 +140,10 @@ begin
        ADDR_WIDTH_B => 16,               -- DECIMAL
        BYTE_WRITE_WIDTH_A => 16,        -- DECIMAL
        CLOCKING_MODE => "common_clock", -- String
-       MEMORY_INIT_FILE => "formata.mem",      -- String
+       MEMORY_INIT_FILE => "formatl_2_nops.mem",      -- String
        MEMORY_INIT_PARAM => "",        -- String
        MEMORY_OPTIMIZATION => "true",   -- String
-       MEMORY_SIZE => 8192,             -- DECIMAL
+       MEMORY_SIZE => 16384,             -- DECIMAL
        MESSAGE_CONTROL => 0,            -- DECIMAL
        READ_DATA_WIDTH_A => 16,         -- DECIMAL
        READ_DATA_WIDTH_B => 16,         -- DECIMAL
@@ -251,6 +251,17 @@ signal address_b: std_logic_vector(15 downto 0);
 signal in_data_a: std_logic_vector(15 downto 0);
 signal in_write_a: std_logic;
 
+component rom
+    Port ( 
+        rom_data_out: out std_logic_vector(15 downto 0);
+        address: in std_logic_vector(15 downto 0);
+        clk: in std_logic
+    );
+end component;
+
+signal rom_data_out: std_logic_vector(15 downto 0);
+signal rom_address: std_logic_vector(15 downto 0);
+
 begin
     u_ram: ram port map(
         out_data_a => out_data_a,
@@ -261,6 +272,12 @@ begin
         in_data_a => in_data_a,
         enable => enable_mem,
         in_write_a => in_write_a
+    );
+    
+    u_rom: rom port map(
+        rom_data_out => rom_data_out,
+        address => rom_address,
+        clk => clk
     );
     
     process(clk) 
@@ -274,20 +291,35 @@ begin
             in_write_a <= '0';  -- turn off writes
             
             -- Read on port b for the instructions.
-            address_b <= in_inst_address;
-            out_inst_data <= out_data_b;
-        
+            if(in_inst_address(10 downto 10) = "1") then -- RAM access
+                address_b <= "000000" & in_inst_address(9 downto 0);  -- strip the top bits
+                out_inst_data <= out_data_b;
+            else 
+                rom_address <= "000000" & in_inst_address(9 downto 0);
+                out_inst_data <= rom_data_out;
+            end if;
+            
             -- Check which operation is being performed and operate.
             if(in_mem_op < "100") then  -- if not a NOP
                 case in_mem_op is
                     when "000" => -- LOAD - load from memory location at in_src_data, write value to out_dest_data
-                        address_a <= in_src_data;
-                        out_dest_data <= out_data_a;
+                        if(in_src_data(10 downto 10) = "1") then  -- RAM access
+                            address_a <= "000000" & in_src_data(9 downto 0);
+                            out_dest_data <= out_data_a;
+                        else  -- LOAD rom address is disabled.
+                            --rom_address <= "00000" & in_src_data(10 downto 0);   
+                            --out_dest_data <= rom_data_out;
+                        end if;
+                        
                         out_enable <= '1';
                     when "001" => -- STORE - read data from in_src_data, store value to memory location at in_dest_data
-                        address_a <= in_dest_data;
-                        in_data_a <= in_src_data;
-                        in_write_a <= '1';
+                        if(in_dest_data(10 downto 10) = "1") then
+                            address_a <= "000000" & in_dest_data(9 downto 0);
+                            in_data_a <= in_src_data;
+                            in_write_a <= '1';
+                        else
+                            -- ROM cannot be written to
+                        end if;
                     when "010" => -- LOADIMM - if in_m1=1, write in_imm to R7<15 downto 8> else write in_imm to R7<7 downto 0>
                         if(in_m1 = '1') then
                             out_dest_data(15 downto 8) <= in_imm;
