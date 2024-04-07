@@ -13,7 +13,7 @@ component control_path_v3 Port (
     out_pc : out std_logic_vector(15 downto 0);
     out_port: out std_logic_vector(15 downto 0);
     in_port: in std_logic_vector(15 downto 0);
-    in_enable: in std_logic;
+    in_port_enable: in std_logic;
     in_clk: in std_logic;
     in_reg_reset: in std_logic
 );
@@ -22,7 +22,7 @@ end component;
 signal pc : std_logic_vector(15 downto 0);   
 signal out_port: std_logic_vector(15 downto 0);  
 signal in_port: std_logic_vector(15 downto 0);    
-signal in_enable: std_logic;                      
+signal in_port_enable: std_logic;                      
 signal clk: std_logic;
 signal reg_rst: std_logic;
     
@@ -31,7 +31,7 @@ begin
         out_pc => pc,
         out_port => out_port,
         in_port => in_port,
-        in_enable => in_enable,
+        in_port_enable => in_port_enable,
         in_clk => clk,
         in_reg_reset => reg_rst
     );
@@ -65,21 +65,21 @@ begin
 		
             when X"0000" =>   -- Initial state setup. Not part of the ASM file.
                 reg_rst <= '1';
-                in_enable <= '0';
+                in_port_enable <= '0';
                 in_port <= X"0000";
             when X"0004" => 
                 reg_rst <= '0';
-                in_enable <= '1';
+                in_port_enable <= '1';
                 in_port <= X"0001";
             when X"0006" =>
-                in_enable <= '1';
+                in_port_enable <= '1';
                 in_port <= X"0003";
             when X"0008" =>
-                in_enable <= '1';
+                in_port_enable <= '1';
                 in_port <= X"0005";
             when X"0010" =>
                 in_port <= X"0000";
-                in_enable <= '0';
+                in_port_enable <= '0';
             when others =>
                 
                

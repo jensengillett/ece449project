@@ -224,7 +224,9 @@ entity memory_unit is
         in_m1: in std_logic;
         in_imm: in std_logic_vector(7 downto 0);
         enable_mem: in std_logic;
-        clk: in std_logic
+        clk: in std_logic;
+        in_inst_address: in std_logic_vector(15 downto 0);
+        out_inst_data: out std_logic_vector(15 downto 0)
     );
 end memory_unit;
 
@@ -261,10 +263,47 @@ begin
         in_write_a => in_write_a
     );
     
-    -- Memory operations chart:
-    -- 000: LOAD - load from memory location at in_src_data, write value to out_dest_data
-    -- 001: STORE - read data from in_src_data, store value to memory location at in_dest_data
-    -- 010: LOADIMM - if in_m1=1, write in_imm to R7<15 downto 8> else write in_imm to R7<7 downto 0>
-    -- 011: MOV - read data from in_src_data, write value to out_dest_data
-    -- 100 - 111: NOP (unit does nothing) - we don't want to affect memory when we don't mean to.
+    process(clk) 
+    -- variables here
+    begin
+        if(rising_edge(clk) and enable_mem = '1') then
+            -- Reset to defaults
+            out_dest_data <= (others => '0');  -- clear output register
+            out_enable <= '0';  -- disable output writeback
+            in_data_a <= (others => '0');  -- clear input data register
+            in_write_a <= '0';  -- turn off writes
+            
+            -- Read on port b for the instructions.
+            address_b <= in_inst_address;
+            out_inst_data <= out_data_b;
+        
+            -- Check which operation is being performed and operate.
+            if(in_mem_op < "100") then  -- if not a NOP
+                case in_mem_op is
+                    when "000" => -- LOAD - load from memory location at in_src_data, write value to out_dest_data
+                        address_a <= in_src_data;
+                        out_dest_data <= out_data_a;
+                        out_enable <= '1';
+                    when "001" => -- STORE - read data from in_src_data, store value to memory location at in_dest_data
+                        address_a <= in_dest_data;
+                        in_data_a <= in_src_data;
+                        in_write_a <= '1';
+                    when "010" => -- LOADIMM - if in_m1=1, write in_imm to R7<15 downto 8> else write in_imm to R7<7 downto 0>
+                        if(in_m1 = '1') then
+                            out_dest_data(15 downto 8) <= in_imm;
+                            out_dest_data(7 downto 0) <= in_src_data(7 downto 0);
+                        else
+                            out_dest_data(7 downto 0) <= in_imm;
+                            out_dest_data(15 downto 8) <= in_src_data(15 downto 8);
+                        end if;
+                        out_enable <= '1';
+                    when "011" => -- MOV - read data from in_src_data, write value to out_dest_data
+                        out_dest_data <= in_src_data;
+                        out_enable <= '1';
+                    when others =>  -- NOP - we don't want to affect memory when we don't mean to.
+                        -- don't do anything...
+                end case;
+            end if;
+        end if;
+    end process;
 end Behavioral;

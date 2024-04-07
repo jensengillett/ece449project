@@ -8,7 +8,7 @@ entity control_path_v3 is
         out_pc : out std_logic_vector(15 downto 0);
         out_port: out std_logic_vector(15 downto 0);
         in_port: in std_logic_vector(15 downto 0);
-        in_enable: in std_logic;
+        in_port_enable: in std_logic;
         in_clk: in std_logic;
         in_reg_reset: in std_logic
     );
@@ -67,13 +67,13 @@ component register_file port(
         wr_enable: in std_logic;
         out_enable: in std_logic;
         out_port: out std_logic_vector(15 downto 0);
-        in_enable: in std_logic;
+        in_port_enable: in std_logic;
         in_index: in std_logic_vector(2 downto 0);
         in_port: in std_logic_vector(15 downto 0)
     );
 end component;
 
-signal reg_rst, reg_wr_enable, reg_out_enable, reg_in_enable: STD_LOGIC;
+signal reg_rst, reg_wr_enable, reg_out_enable, reg_in_port_enable: STD_LOGIC;
 signal reg_rd_index1, reg_rd_index2, reg_wr_index, reg_in_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal reg_rd_data1, reg_rd_data2, reg_rd_data3, reg_wr_data, reg_out_port, reg_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
 
@@ -92,8 +92,8 @@ component decoder Port (
         branch_displacement: out STD_LOGIC_VECTOR(8 DOWNTO 0);
         in_in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         out_in_port: out STD_LOGIC_VECTOR(15 DOWNTO 0);
-        in_in_enable: in STD_LOGIC;
-        out_in_enable: out STD_LOGIC;
+        in_in_port_enable: in STD_LOGIC;
+        out_in_port_enable: out STD_LOGIC;
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
         out_enable: out STD_LOGIC;
@@ -102,7 +102,7 @@ component decoder Port (
     );
 end component;
 
-signal decode_wb_op, decode_out_enable, decode_in_in_enable, decode_out_in_enable: STD_LOGIC;
+signal decode_wb_op, decode_out_enable, decode_in_in_port_enable, decode_out_in_port_enable: STD_LOGIC;
 signal decode_instruction, decode_in_in_port, decode_out_in_port, decode_in_write_data: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal decode_alu_op, decode_read_1_select, decode_read_2_select, decode_write_select, decode_in_port_index, decode_mem_op: STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal decode_branch_op: STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -130,16 +130,17 @@ component if_id_latch Port (
         if_out_instruction : out std_logic_vector(15 downto 0);
         if_in_in_port : in std_logic_vector(15 downto 0);
         if_out_in_port : out std_logic_vector(15 downto 0);
-        if_in_in_enable : in std_logic;
-        if_out_in_enable: out std_logic;
+        if_in_in_port_enable : in std_logic;
+        if_out_in_port_enable: out std_logic;
         if_in_pc : in std_logic_vector(15 downto 0);
         if_out_pc : out std_logic_vector(15 downto 0);
-        if_in_flush_pipeline: in std_logic
+        if_in_flush_pipeline: in std_logic;
+        if_enable_latch: in std_logic
     );
 end component;
 
 signal if_in_instruction, if_out_instruction, if_in_in_port, if_out_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
-signal if_in_in_enable, if_out_in_enable, if_in_flush_pipeline: STD_LOGIC;
+signal if_in_in_port_enable, if_out_in_port_enable, if_in_flush_pipeline: STD_LOGIC;
 signal if_in_pc, if_out_pc: STD_LOGIC_VECTOR(15 downto 0);
 
 component id_ex_latch Port(
@@ -169,7 +170,8 @@ component id_ex_latch Port(
         id_in_m1: in std_logic;
         id_out_m1: out std_logic;
         id_in_imm: in std_logic_vector(7 downto 0);
-        id_out_imm: out std_logic_vector(7 downto 0)        
+        id_out_imm: out std_logic_vector(7 downto 0);
+        id_enable_latch: in std_logic
     );
 end component;
 
@@ -216,7 +218,8 @@ component ex_mem_latch Port(
         ex_in_rd_data_1: in std_logic_vector(15 downto 0);
         ex_out_rd_data_1: out std_logic_vector(15 downto 0);
         ex_in_rd_data_2: in std_logic_vector(15 downto 0);
-        ex_out_rd_data_2: out std_logic_vector(15 downto 0)
+        ex_out_rd_data_2: out std_logic_vector(15 downto 0);
+        ex_enable_latch: in std_logic
     );
 end component;
 
@@ -224,8 +227,7 @@ signal ex_in_alu_result: std_logic_vector(15 downto 0);
 signal ex_out_alu_result: std_logic_vector(15 downto 0);
 signal ex_in_mem_op: std_logic_vector(2 downto 0);
 signal ex_out_mem_op: std_logic_vector(2 downto 0);
-signal ex_in_wb_op: std_logic;
-signal ex_out_wb_op: std_logic;
+signal ex_in_wb_op, ex_out_wb_op: std_logic;
 signal ex_in_wb_register : std_logic_vector(2 downto 0);
 signal ex_out_wb_register : std_logic_vector(2 downto 0);
 signal ex_in_m1, ex_out_m1: std_logic;
@@ -246,7 +248,8 @@ component mem_wb_latch Port(
         mem_in_wb_op: in std_logic;
         mem_out_wb_op: out std_logic;
         mem_in_wb_register : in std_logic_vector(2 downto 0);
-        mem_out_wb_register : out std_logic_vector(2 downto 0)
+        mem_out_wb_register : out std_logic_vector(2 downto 0);
+        mem_enable_latch: in std_logic
     );
 end component;
 
@@ -279,7 +282,9 @@ component memory_unit port(
         in_m1: in std_logic;
         in_imm: in std_logic_vector(7 downto 0);
         enable_mem: in std_logic;
-        clk: in std_logic
+        clk: in std_logic;
+        in_inst_address: in std_logic_vector(15 downto 0);
+        out_inst_data: out std_logic_vector(15 downto 0)
     );
 end component; 
 
@@ -290,6 +295,8 @@ signal mem_unit_out_dest_data: std_logic_vector(15 downto 0);
 signal mem_unit_in_m1: std_logic;
 signal mem_unit_in_imm: std_logic_vector(7 downto 0);
 signal mem_unit_out_enable: std_logic;
+signal mem_unit_in_inst_address: std_logic_vector(15 downto 0);
+signal mem_unit_out_inst_data: std_logic_vector(15 downto 0);
 
 -- Enable lines
 signal en_decode: STD_LOGIC := '1';
@@ -298,6 +305,10 @@ signal en_alu: STD_LOGIC := '1';
 signal en_regwrite: STD_LOGIC := '1';
 signal en_pc: STD_LOGIC := '1';
 signal en_mem: STD_LOGIC := '1';
+signal en_if_latch: STD_LOGIC := '1';
+signal en_id_latch: STD_LOGIC := '1';
+signal en_ex_latch: STD_LOGIC := '1';
+signal en_mem_latch: STD_LOGIC := '1';
 
 begin
     u_alu: alu port map(
@@ -337,7 +348,7 @@ begin
         wr_enable => reg_wr_enable and en_regwrite,
         out_enable => reg_out_enable,
         out_port => reg_out_port,
-        in_enable => reg_in_enable,
+        in_port_enable => reg_in_port_enable,
         in_index => reg_in_index,
         in_port => reg_in_port
     );
@@ -357,8 +368,8 @@ begin
         branch_displacement => decode_branch_displacement,
         in_in_port => decode_in_in_port,
         out_in_port => decode_out_in_port,
-        in_in_enable => decode_in_in_enable,
-        out_in_enable => decode_out_in_enable,
+        in_in_port_enable => decode_in_in_port_enable,
+        out_in_port_enable => decode_out_in_port_enable,
         in_write_data => decode_in_write_data,
         in_port_index => decode_in_port_index,
         out_enable => decode_out_enable,
@@ -381,11 +392,12 @@ begin
         if_out_instruction => if_out_instruction,
         if_in_in_port => if_in_in_port,
         if_out_in_port => if_out_in_port,
-        if_in_in_enable => if_in_in_enable,
-        if_out_in_enable => if_out_in_enable,
+        if_in_in_port_enable => if_in_in_port_enable,
+        if_out_in_port_enable => if_out_in_port_enable,
         if_in_pc => if_in_pc,
         if_out_pc => if_out_pc,
-        if_in_flush_pipeline => if_in_flush_pipeline
+        if_in_flush_pipeline => if_in_flush_pipeline,
+        if_enable_latch => en_if_latch
     );
     
     u_id_ex : id_ex_latch port map(
@@ -415,7 +427,8 @@ begin
         id_in_m1 => id_in_m1,
         id_out_m1 => id_out_m1,
         id_in_imm => id_in_imm,
-        id_out_imm => id_out_imm
+        id_out_imm => id_out_imm,
+        id_enable_latch => en_id_latch
     );
     
     u_ex_mem: ex_mem_latch port map(
@@ -437,7 +450,8 @@ begin
         ex_in_rd_data_1 => ex_in_rd_data_1,
         ex_out_rd_data_1 => ex_out_rd_data_1,
         ex_in_rd_data_2 => ex_in_rd_data_2,
-        ex_out_rd_data_2 => ex_out_rd_data_2
+        ex_out_rd_data_2 => ex_out_rd_data_2,
+        ex_enable_latch => en_ex_latch
     );
     
     u_mem_wb: mem_wb_latch port map(
@@ -453,7 +467,8 @@ begin
         mem_in_mem_load => mem_in_mem_load,
         mem_out_mem_load => mem_out_mem_load,
         mem_in_mem_load_en => mem_in_mem_load_en,
-        mem_out_mem_load_en => mem_out_mem_load_en
+        mem_out_mem_load_en => mem_out_mem_load_en,
+        mem_enable_latch => en_mem_latch
     );
     
     u_rom: rom port map(
@@ -471,22 +486,24 @@ begin
         out_enable    =>  mem_unit_out_enable   ,
         in_m1         =>  mem_unit_in_m1        ,
         in_imm        =>  mem_unit_in_imm       ,
-        enable_mem    =>  en_mem   
+        enable_mem    =>  en_mem,
+        in_inst_address => mem_unit_in_inst_address,
+        out_inst_data => mem_unit_out_inst_data
     );
     
     -- Link PC and clk
     out_pc <= pc;
     clk <= in_clk;
     reg_rst <= in_reg_reset;
-    rom_address <= pc(8 downto 1);
+    mem_unit_in_inst_address <= '0' & pc(15 downto 1);
     
     -- Link pipeline flush flag from ALU -> Control path -> IF/ID register
     if_in_flush_pipeline <= alu_flush_pipeline;
     
     -- Instruction fetch
-    if_in_instruction <= rom_data_out;
+    if_in_instruction <= mem_unit_out_inst_data;
     if_in_in_port <= in_port;
-    if_in_in_enable <= in_enable;
+    if_in_in_port_enable <= in_port_enable;
     if_in_pc <= pc;
     
     -- Decode 'Inputs'
@@ -497,9 +514,9 @@ begin
     --reg_in_port <= if_out_in_port;
     decode_in_in_port <= if_out_in_port;
     reg_in_port <= decode_out_in_port;
-    --reg_in_enable <= if_out_in_enable;
-    decode_in_in_enable <= if_out_in_enable;
-    reg_in_enable <= decode_out_in_enable;
+    --reg_in_port_enable <= if_out_in_port_enable;
+    decode_in_in_port_enable <= if_out_in_port_enable;
+    reg_in_port_enable <= decode_out_in_port_enable;
     reg_in_index <= decode_in_port_index;
     
     -- Decode 'Outputs'

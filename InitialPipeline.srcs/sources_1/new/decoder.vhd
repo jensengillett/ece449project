@@ -20,8 +20,8 @@ entity decoder is
         branch_displacement: out STD_LOGIC_VECTOR(8 DOWNTO 0);
         in_in_port: in STD_LOGIC_VECTOR(15 DOWNTO 0);
         out_in_port: out STD_LOGIC_VECTOR(15 DOWNTO 0);
-        in_in_enable: in STD_LOGIC;
-        out_in_enable: out STD_LOGIC;
+        in_in_port_enable: in STD_LOGIC;
+        out_in_port_enable: out STD_LOGIC;
         in_write_data: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
         out_enable: out STD_LOGIC;
@@ -165,7 +165,7 @@ begin
                 in_port_index <= "000";
             end if;
             out_in_port <= in_in_port;
-            out_in_enable <= in_in_enable;
+            out_in_port_enable <= in_in_port_enable;
         end if;
     end process;
 

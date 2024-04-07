@@ -12,11 +12,12 @@ entity if_id_latch is
         if_out_instruction : out std_logic_vector(15 downto 0);
         if_in_in_port : in std_logic_vector(15 downto 0);
         if_out_in_port : out std_logic_vector(15 downto 0);
-        if_in_in_enable : in std_logic;
-        if_out_in_enable: out std_logic;
+        if_in_in_port_enable : in std_logic;
+        if_out_in_port_enable: out std_logic;
         if_in_pc : in std_logic_vector(15 downto 0);
         if_out_pc: out std_logic_vector(15 downto 0);
-        if_in_flush_pipeline: in std_logic
+        if_in_flush_pipeline: in std_logic;
+        if_enable_latch: in std_logic
     );
 end if_id_latch;
 
@@ -28,7 +29,7 @@ begin
     begin
         temp_instruction := if_in_instruction;
     
-        if(rising_edge(clk)) then
+        if(rising_edge(clk) and if_enable_latch = '1') then
         
             if (if_in_flush_pipeline = '1') then
                 temp_instruction := (others => '0');
@@ -36,10 +37,10 @@ begin
                 temp_instruction := if_in_instruction;
             end if;        
     
-        elsif(falling_edge(clk)) then
+        elsif(falling_edge(clk) and if_enable_latch = '1') then
             if_out_instruction <= temp_instruction;
             if_out_in_port <= if_in_in_port;
-            if_out_in_enable <= if_in_in_enable;
+            if_out_in_port_enable <= if_in_in_port_enable;
             if_out_pc <= if_in_pc;
         end if;
     end process;
@@ -79,14 +80,15 @@ entity id_ex_latch is
         id_in_m1: in std_logic;
         id_out_m1: out std_logic;
         id_in_imm: in std_logic_vector(7 downto 0);
-        id_out_imm: out std_logic_vector(7 downto 0)
+        id_out_imm: out std_logic_vector(7 downto 0);
+        id_enable_latch: in std_logic;
     );
 end id_ex_latch;
 
 architecture Behavioral of id_ex_latch is
 begin
     process(clk) begin
-        if(falling_edge(clk)) then
+        if(falling_edge(clk) and id_enable_latch = '1') then
             id_out_rd_data_1 <= id_in_rd_data_1;
             id_out_rd_data_2 <= id_in_rd_data_2;
             id_out_rd_data_3 <= id_in_rd_data_3;
@@ -130,14 +132,15 @@ entity ex_mem_latch is
         ex_in_rd_data_1: in std_logic_vector(15 downto 0);
         ex_out_rd_data_1: out std_logic_vector(15 downto 0);
         ex_in_rd_data_2: in std_logic_vector(15 downto 0);
-        ex_out_rd_data_2: out std_logic_vector(15 downto 0)
+        ex_out_rd_data_2: out std_logic_vector(15 downto 0);
+        ex_enable_latch: in std_logic
     );
 end ex_mem_latch;
 
 architecture Behavioral of ex_mem_latch is
 begin
     process(clk) begin
-        if(falling_edge(clk)) then
+        if(falling_edge(clk) and ex_enable_latch = '1') then
             ex_out_alu_result <= ex_in_alu_result;
             ex_out_mem_op <= ex_in_mem_op;
             ex_out_wb_op <= ex_in_wb_op;
@@ -171,14 +174,15 @@ entity mem_wb_latch is
         mem_in_wb_op: in std_logic;
         mem_out_wb_op: out std_logic;
         mem_in_wb_register : in std_logic_vector(2 downto 0);
-        mem_out_wb_register : out std_logic_vector(2 downto 0)
+        mem_out_wb_register : out std_logic_vector(2 downto 0);
+        mem_enable_latch: in std_logic
     );
 end mem_wb_latch;
 
 architecture Behavioral of mem_wb_latch is
 begin
     process(clk) begin
-        if(falling_edge(clk)) then
+        if(falling_edge(clk) and mem_enable_latch = '1') then
             mem_out_alu_result <= mem_in_alu_result;
             mem_out_wb_op <= mem_in_wb_op;
             mem_out_wb_register <= mem_in_wb_register;

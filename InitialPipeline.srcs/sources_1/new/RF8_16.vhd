@@ -23,7 +23,7 @@ entity register_file is
         out_enable: in std_logic;
         out_port: out std_logic_vector(15 downto 0);
         in_index: in std_logic_vector(2 downto 0);
-        in_enable: in std_logic;
+        in_port_enable: in std_logic;
         in_port: in std_logic_vector(15 downto 0)
     );
 end register_file;
@@ -43,7 +43,7 @@ begin
                    reg_file(i)<= (others => '0'); 
                 end loop;
             -- write input to reg file
-            elsif(in_enable='1') then
+            elsif(in_port_enable='1') then
              case in_index(2 downto 0) is
                  when "000" => reg_file(0) <= in_port;
                  when "001" => reg_file(1) <= in_port;
