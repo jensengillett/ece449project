@@ -28,16 +28,14 @@ begin
     variable temp_instruction : std_logic_vector(15 downto 0);
     begin
         temp_instruction := if_in_instruction;
-    
-        if(rising_edge(clk) and if_enable_latch = '1') then
-        
+
+        if(falling_edge(clk) and if_enable_latch = '1') then
             if (if_in_flush_pipeline = '1') then
                 temp_instruction := (others => '0');
             else 
                 temp_instruction := if_in_instruction;
-            end if;        
-    
-        elsif(falling_edge(clk) and if_enable_latch = '1') then
+            end if; 
+        
             if_out_instruction <= temp_instruction;
             if_out_in_port <= if_in_in_port;
             if_out_in_port_enable <= if_in_in_port_enable;
@@ -81,6 +79,7 @@ entity id_ex_latch is
         id_out_m1: out std_logic;
         id_in_imm: in std_logic_vector(7 downto 0);
         id_out_imm: out std_logic_vector(7 downto 0);
+        id_in_flush_pipeline: in std_logic;
         id_enable_latch: in std_logic
     );
 end id_ex_latch;
@@ -89,19 +88,27 @@ architecture Behavioral of id_ex_latch is
 begin
     process(clk) begin
         if(falling_edge(clk) and id_enable_latch = '1') then
-            id_out_rd_data_1 <= id_in_rd_data_1;
-            id_out_rd_data_2 <= id_in_rd_data_2;
-            id_out_rd_data_3 <= id_in_rd_data_3;
-            id_out_alu_op <= id_in_alu_op;
-            id_out_cl_value <= id_in_cl_value;
-            id_out_branch_op <= id_in_branch_op;
-            id_out_branch_displacement <= id_in_branch_displacement;
-            id_out_mem_op <= id_in_mem_op;
-            id_out_wb_op <= id_in_wb_op;
-            id_out_wb_register <= id_in_wb_register;
-            id_out_pc <= id_in_pc;
-            id_out_m1 <= id_in_m1;
-            id_out_imm <= id_in_imm;
+            if (id_in_flush_pipeline = '1') then
+            
+                id_out_alu_op <= (others => '0');
+                id_out_branch_op <= (others => '0');
+                id_out_mem_op <= (others => '0');
+                id_out_wb_op <= '0';
+            else
+                id_out_rd_data_1 <= id_in_rd_data_1;
+                id_out_rd_data_2 <= id_in_rd_data_2;
+                id_out_rd_data_3 <= id_in_rd_data_3;
+                id_out_alu_op <= id_in_alu_op;
+                id_out_cl_value <= id_in_cl_value;
+                id_out_branch_op <= id_in_branch_op;
+                id_out_branch_displacement <= id_in_branch_displacement;
+                id_out_mem_op <= id_in_mem_op;
+                id_out_wb_op <= id_in_wb_op;
+                id_out_wb_register <= id_in_wb_register;
+                id_out_pc <= id_in_pc;
+                id_out_m1 <= id_in_m1;
+                id_out_imm <= id_in_imm;
+            end if;
         end if;
     end process;
 end Behavioral;

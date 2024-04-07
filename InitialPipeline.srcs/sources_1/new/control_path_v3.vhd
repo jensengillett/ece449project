@@ -171,6 +171,7 @@ component id_ex_latch Port(
         id_out_m1: out std_logic;
         id_in_imm: in std_logic_vector(7 downto 0);
         id_out_imm: out std_logic_vector(7 downto 0);
+        id_in_flush_pipeline :in std_logic;
         id_enable_latch: in std_logic
     );
 end component;
@@ -196,7 +197,7 @@ signal id_out_branch_op : std_logic_vector(7 downto 0);
 signal id_in_branch_displacement : std_logic_vector(8 downto 0); 
 signal id_out_branch_displacement : std_logic_vector(8 downto 0);
 signal id_in_pc, id_out_pc: STD_LOGIC_VECTOR(15 downto 0);
-signal id_in_m1, id_out_m1: std_logic;
+signal id_in_m1, id_out_m1, id_in_flush_pipeline: std_logic;
 signal id_in_imm, id_out_imm: std_logic_vector(7 downto 0);
 
 component ex_mem_latch Port(
@@ -428,6 +429,7 @@ begin
         id_out_m1 => id_out_m1,
         id_in_imm => id_in_imm,
         id_out_imm => id_out_imm,
+        id_in_flush_pipeline => id_in_flush_pipeline,
         id_enable_latch => en_id_latch
     );
     
@@ -499,6 +501,7 @@ begin
     
     -- Link pipeline flush flag from ALU -> Control path -> IF/ID register
     if_in_flush_pipeline <= alu_flush_pipeline;
+    id_in_flush_pipeline <= alu_flush_pipeline;
     
     -- Instruction fetch
     if_in_instruction <= mem_unit_out_inst_data;
