@@ -1,28 +1,145 @@
 #-----------------------------------------------------------
-# Vivado v2023.2.1 (64-bit)
-# SW Build 4081461 on Thu Dec 14 12:24:51 MST 2023
-# IP Build 4080415 on Thu Dec 14 21:01:57 MST 2023
-# SharedData Build 4077621 on Mon Dec 11 00:23:44 MST 2023
-# Start of session at: Mon Mar 18 16:05:28 2024
-# Process ID: 17608
-# Current directory: C:/School/ece449/InitialPipeline
-# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent16004 C:\School\ece449\InitialPipeline\InitialPipeline.xpr
-# Log file: C:/School/ece449/InitialPipeline/vivado.log
-# Journal file: C:/School/ece449/InitialPipeline\vivado.jou
-# Running On: INVESTIGATOR, OS: Windows, CPU Frequency: 1996 MHz, CPU Physical cores: 8, Host memory: 16522 MB
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Sun Apr  7 22:47:31 2024
+# Process ID: 17964
+# Current directory: C:/Xilinx/Vivado_Projects/ece449project
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent39400 C:\Xilinx\Vivado_Projects\ece449project\InitialPipeline.xpr
+# Log file: C:/Xilinx/Vivado_Projects/ece449project/vivado.log
+# Journal file: C:/Xilinx/Vivado_Projects/ece449project\vivado.jou
+# Running On: POSEIDON2, OS: Windows, CPU Frequency: 4008 MHz, CPU Physical cores: 6, Host memory: 34280 MB
 #-----------------------------------------------------------
 start_gui
-open_project C:/School/ece449/InitialPipeline/InitialPipeline.xpr
+open_project C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.xpr
 update_compile_order -fileset sources_1
 launch_simulation
-open_wave_config C:/School/ece449/InitialPipeline/test_format_a_behav.wcfg
-source test_format_b.tcl
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_a.tcl
 restart
 run 700 us
+add_bp {C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_a.vhd} 52
 restart
-run 500 us
-current_wave_config {test_format_a_behav.wcfg}
-add_wave {{/test_format_b/u0/u_if_id}} 
-restart
-run 500 us
+run 700 us
 close_sim
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_a.tcl
+restart
+run 700 us
+close_sim
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_a.tcl
+remove_bps -file {C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_a.vhd} -line 52
+restart
+run 700 us
+current_wave_config {test_format_a_behav.wcfg}
+add_wave {{/test_format_a/u0/u_register/reg_file}} 
+restart
+run 700 us
+save_wave_config {C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_a.tcl
+restart
+run 700 us
+close_sim
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_a.tcl
+restart
+run 700 us
+run 700 us
+close_sim
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top test_format_b [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_b_1.vhd w ]
+add_files -fileset sim_1 C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_b_1.vhd
+update_compile_order -fileset sim_1
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top test_format_b_1 [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_b_1.tcl
+restart
+current_wave_config {test_format_a_behav.wcfg}
+add_wave {{/test_format_b_1/u0}} 
+current_wave_config {test_format_a_behav.wcfg}
+add_wave {{/test_format_b_1/u0/u_register}} 
+restart
+run 700 us
+run 700 us
+restart
+run 6000 us
+save_wave_config {C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_b_1.tcl
+restart
+run 6000 us
+close_sim
+add_files -norecurse C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_1_nops.mem
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_b_1.tcl
+restart
+run 6000 us
+add_files -norecurse C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_2_nops.mem
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_b_2.vhd w ]
+add_files -fileset sim_1 C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_b_2.vhd
+update_compile_order -fileset sim_1
+close_sim
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_b_1.tcl
+close_sim
+# Disabling source management mode.  This is to allow the top design properties to be set without GUI intervention.
+set_property source_mgmt_mode None [current_project]
+set_property top test_format_b_2 [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
+# Re-enabling previously disabled source management mode.
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sim_1
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_b_2.tcl
+restart
+current_wave_config {test_format_a_behav.wcfg}
+add_wave {{/test_format_b_2}} 
+current_wave_config {test_format_a_behav.wcfg}
+add_wave {{/test_format_b_2/u0}} 
+current_wave_config {test_format_a_behav.wcfg}
+add_wave {{/test_format_b_2/u0/u_register/reg_file}} 
+restart
+run 6000 us
+save_wave_config {C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg}
+close_sim
+launch_simulation
+open_wave_config C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg
+source test_format_b_2.tcl
+restart
+run 7000 us
+run 500 us
+run 500 us
+save_wave_config {C:/Xilinx/Vivado_Projects/ece449project/test_format_a_behav.wcfg}
+close_sim
+set_property SOURCE_SET sources_1 [get_filesets sim_1]
+close [ open C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_b_3.vhd w ]
+add_files -fileset sim_1 C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sim_1/new/test_format_b_3.vhd

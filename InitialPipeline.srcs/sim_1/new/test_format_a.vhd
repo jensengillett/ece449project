@@ -54,12 +54,13 @@ begin
                 in_port <= X"0000";
             when X"0004" => 
                 reg_rst <= '0';
+            when X"0800" => 
                 in_port_enable <= '1';
                 in_port <= X"0003";
-            when X"0006" =>
+            when X"0802" =>
                 in_port_enable <= '1';
                 in_port <= X"0005";
-            when X"0008" =>
+            when X"0804" =>
                 in_port_enable <= '0';
                 in_port <= X"0000";
             when others =>

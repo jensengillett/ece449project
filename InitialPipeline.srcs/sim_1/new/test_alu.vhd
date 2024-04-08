@@ -15,16 +15,27 @@ end test_alu;
 architecture Behavioral of test_alu is
 
 -- Include ALU as a component.
-component alu port(
-    a, b    : in    STD_LOGIC_VECTOR(15 DOWNTO 0);
-    cl      : in    STD_LOGIC_VECTOR(3 DOWNTO 0);
-    f       : in    STD_LOGIC_VECTOR(2 DOWNTO 0);
-    clk     : in    STD_LOGIC;
-    negative, zero, overflow : out   STD_LOGIC;
-    result, extra_16_bits  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
-    alu_enable : in STD_LOGIC;
-    wb_op : in STD_LOGIC
-);
+component alu 
+    Port(
+        a, b    : in    STD_LOGIC_VECTOR(15 DOWNTO 0);
+        cl      : in    STD_LOGIC_VECTOR(3 DOWNTO 0);
+        f       : in    STD_LOGIC_VECTOR(2 DOWNTO 0);
+        clk     : in    STD_LOGIC;
+        negative, zero, overflow : inout   STD_LOGIC;
+        result  : out   STD_LOGIC_VECTOR(15 DOWNTO 0);
+        result_enable : out STD_LOGIC;
+        extra_16_bits : out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        alu_enable: in  STD_LOGIC;
+        -- Data for branching
+        branch_op: in STD_LOGIC_VECTOR(7 DOWNTO 0);
+        branch_displacement: in STD_LOGIC_VECTOR(8 DOWNTO 0);
+        in_pc: in STD_LOGIC_VECTOR(15 DOWNTO 0);
+        out_pc: out STD_LOGIC_VECTOR(16 DOWNTO 0);
+        flush_pipeline: out STD_LOGIC; -- ALU signal to indicate that control path that a branch was taken
+        wb_register_in: in STD_LOGIC_VECTOR(2 downto 0); -- writeback op input to select R7 for BR.SUB and RETURN instructions
+        wb_register_out: out STD_LOGIC_VECTOR(2 downto 0);
+        reg_seven_in: in STD_LOGIC_VECTOR(15 downto 0)
+    );
 end component;
 
 -- Set up signals internally for each of the ALU signals.
@@ -35,7 +46,15 @@ signal clk     : STD_LOGIC;
 signal negative, zero, overflow : STD_LOGIC;
 signal result, extra_16_bits  : STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal alu_enable : STD_LOGIC;
-signal wb_op : STD_LOGIC;
+signal branch_op: STD_LOGIC_VECTOR(7 DOWNTO 0);
+signal branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
+signal in_pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal out_pc: STD_LOGIC_VECTOR(16 DOWNTO 0);
+signal flush_pipeline: STD_LOGIC; -- ALU signal to indicate that control path that a branch was taken
+signal wb_register_in: STD_LOGIC_VECTOR(2 downto 0); -- writeback op input to select R7 for BR.SUB and RETURN instructions
+signal wb_register_out: STD_LOGIC_VECTOR(2 downto 0);
+signal reg_seven_in: STD_LOGIC_VECTOR(15 downto 0);
+
 
 begin
     -- Port map the internal signals to the ALU.
@@ -51,7 +70,14 @@ begin
         result => result, 
         extra_16_bits => extra_16_bits,
         alu_enable => alu_enable,
-        wb_op => wb_op
+        branch_op             =>  branch_op             ,
+        branch_displacement   =>  branch_displacement   ,
+        in_pc                 =>  in_pc                 ,
+        out_pc                =>  out_pc                ,
+        flush_pipeline        =>  flush_pipeline        ,
+        wb_register_in        =>  wb_register_in        ,
+        wb_register_out       =>  wb_register_out       ,
+        reg_seven_in          =>  reg_seven_in       
     );
     
     -- Clock process. This just clocks the ALU automatically every 10us.
