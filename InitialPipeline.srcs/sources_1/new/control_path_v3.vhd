@@ -5,12 +5,21 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity control_path_v3 is
     Port ( 
-        out_pc : out std_logic_vector(15 downto 0);
-        out_port: out std_logic_vector(15 downto 0);
+        --out_pc : out std_logic_vector(15 downto 0);
+        --out_port: out std_logic_vector(15 downto 0);
         in_port: in std_logic_vector(15 downto 0);
         in_port_enable: in std_logic;
         in_clk: in std_logic;
-        in_reg_reset: in std_logic
+        in_reg_reset: in std_logic;
+        debug_console : in STD_LOGIC;
+        board_clock: in std_logic;
+       
+        vga_red : out std_logic_vector( 3 downto 0 );
+        vga_green : out std_logic_vector( 3 downto 0 );
+        vga_blue : out std_logic_vector( 3 downto 0 );
+       
+        h_sync_signal : out std_logic;
+        v_sync_signal : out std_logic
     );
 end control_path_v3;
 
@@ -69,11 +78,12 @@ component register_file port(
         out_port: out std_logic_vector(15 downto 0);
         in_port_enable: in std_logic;
         in_index: in std_logic_vector(2 downto 0);
-        in_port: in std_logic_vector(15 downto 0)
+        in_port: in std_logic_vector(15 downto 0);
+        in_flush_pipeline: in std_logic
     );
 end component;
 
-signal reg_rst, reg_wr_enable, reg_out_enable, reg_in_port_enable: STD_LOGIC;
+signal reg_rst, reg_wr_enable, reg_out_enable, reg_in_port_enable, reg_in_flush_pipeline: STD_LOGIC;
 signal reg_rd_index1, reg_rd_index2, reg_wr_index, reg_in_index: STD_LOGIC_VECTOR(2 DOWNTO 0);
 signal reg_rd_data1, reg_rd_data2, reg_rd_data3, reg_wr_data, reg_out_port, reg_in_port: STD_LOGIC_VECTOR(15 DOWNTO 0);
 
@@ -98,7 +108,8 @@ component decoder Port (
         in_port_index : out STD_LOGIC_VECTOR(2 DOWNTO 0);
         out_enable: out STD_LOGIC;
         out_m1: out STD_LOGIC;
-        out_imm: out STD_LOGIC_VECTOR(7 DOWNTO 0)
+        out_imm: out STD_LOGIC_VECTOR(7 DOWNTO 0);
+        in_flush_pipeline: in STD_LOGIC
     );
 end component;
 
@@ -108,7 +119,7 @@ signal decode_alu_op, decode_read_1_select, decode_read_2_select, decode_write_s
 signal decode_branch_op: STD_LOGIC_VECTOR(7 DOWNTO 0);
 signal decode_branch_displacement: STD_LOGIC_VECTOR(8 DOWNTO 0);
 signal decode_cl_value: STD_LOGIC_VECTOR(3 DOWNTO 0);
-signal decode_out_m1: STD_LOGIC;
+signal decode_out_m1, decode_in_flush_pipeline: STD_LOGIC;
 signal decode_out_imm: STD_LOGIC_VECTOR(7 DOWNTO 0);
 
 component pc_unit Port (
@@ -116,12 +127,14 @@ component pc_unit Port (
         in_pc: in STD_LOGIC_VECTOR(16 DOWNTO 0);
         in_pc_reset: in STD_LOGIC;
         out_pc: out STD_LOGIC_VECTOR(15 DOWNTO 0);
+        out_pc_2: out STD_LOGIC_VECTOR(15 DOWNTO 0);
         in_en_pc: in STD_LOGIC
      );
 end component;
 
 signal in_pc: STD_LOGIC_VECTOR(16 DOWNTO 0);
 signal pc: STD_LOGIC_VECTOR(15 DOWNTO 0);
+signal out_pc_2: STD_LOGIC_VECTOR(15 DOWNTO 0);
 signal in_pc_reset: STD_LOGIC;
 
 component if_id_latch Port (
@@ -311,6 +324,134 @@ signal en_id_latch: STD_LOGIC := '1';
 signal en_ex_latch: STD_LOGIC := '1';
 signal en_mem_latch: STD_LOGIC := '1';
 
+component console is
+    port (
+
+--
+-- Stage 1 Fetch
+--
+        s1_pc : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        s1_inst : in STD_LOGIC_VECTOR ( 15 downto 0 );
+
+
+--
+-- Stage 2 Decode
+--
+        s2_pc : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        s2_inst : in STD_LOGIC_VECTOR ( 15 downto 0 );
+
+        s2_reg_a : in STD_LOGIC_VECTOR( 2 downto 0 );
+        s2_reg_b : in STD_LOGIC_VECTOR( 2 downto 0 );
+        s2_reg_c : in STD_LOGIC_VECTOR( 2 downto 0 );
+
+        s2_reg_a_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+        s2_reg_b_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+        s2_reg_c_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+        s2_immediate : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+
+--
+-- Stage 3 Execute
+--
+        s3_pc : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        s3_inst : in STD_LOGIC_VECTOR ( 15 downto 0 );
+
+        s3_reg_a : in STD_LOGIC_VECTOR( 2 downto 0 );
+        s3_reg_b : in STD_LOGIC_VECTOR( 2 downto 0 );
+        s3_reg_c : in STD_LOGIC_VECTOR( 2 downto 0 );
+
+        s3_reg_a_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+        s3_reg_b_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+        s3_reg_c_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+        s3_immediate : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+--
+-- Branch and memory operation
+--
+        s3_r_wb : in STD_LOGIC;
+        s3_r_wb_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+        s3_br_wb : in STD_LOGIC;
+        s3_br_wb_address : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+        s3_mr_wr : in STD_LOGIC;
+        s3_mr_wr_address : in STD_LOGIC_VECTOR( 15 downto 0 );
+        s3_mr_wr_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+        s3_mr_rd : in STD_LOGIC;
+        s3_mr_rd_address : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+--
+-- Stage 4 Memory
+--
+        s4_pc : in STD_LOGIC_VECTOR( 15 downto 0 );
+        s4_inst : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+        s4_reg_a : in STD_LOGIC_VECTOR( 2 downto 0 );
+
+        s4_r_wb : in STD_LOGIC;
+        s4_r_wb_data : in STD_LOGIC_VECTOR( 15 downto 0 );
+
+--
+-- CPU registers
+--
+
+        register_0 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        register_1 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        register_2 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        register_3 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        register_4 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        register_5 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        register_6 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+        register_7 : in STD_LOGIC_VECTOR ( 15 downto 0 );
+
+--
+-- CPU registers overflow flags
+--
+        register_0_of : in STD_LOGIC;
+        register_1_of : in STD_LOGIC;
+        register_2_of : in STD_LOGIC;
+        register_3_of : in STD_LOGIC;
+        register_4_of : in STD_LOGIC;
+        register_5_of : in STD_LOGIC;
+        register_6_of : in STD_LOGIC;
+        register_7_of : in STD_LOGIC;
+
+--
+-- CPU Flags
+--
+        zero_flag : in STD_LOGIC;
+        negative_flag : in STD_LOGIC;
+        overflow_flag : in STD_LOGIC;
+
+--
+-- Debug screen enable
+--
+        debug : in STD_LOGIC;
+
+--
+-- Text console display memory access signals ( clk is the processor clock )
+--
+        addr_write : in  STD_LOGIC_VECTOR (15 downto 0);
+        clk : in  STD_LOGIC;
+        data_in : in  STD_LOGIC_VECTOR (15 downto 0);
+        en_write : in  STD_LOGIC;
+
+--
+-- Video related signals
+--
+        board_clock : in STD_LOGIC;
+        v_sync_signal : out STD_LOGIC;
+        h_sync_signal : out STD_LOGIC;
+        vga_red : out STD_LOGIC_VECTOR( 3 downto 0 );
+        vga_green : out STD_LOGIC_VECTOR( 3 downto 0 );
+        vga_blue : out STD_LOGIC_VECTOR( 3 downto 0 )
+
+    );
+end component;
+
 begin
     u_alu: alu port map(
         a => alu_a,
@@ -351,7 +492,8 @@ begin
         out_port => reg_out_port,
         in_port_enable => reg_in_port_enable,
         in_index => reg_in_index,
-        in_port => reg_in_port
+        in_port => reg_in_port,
+        in_flush_pipeline => reg_in_flush_pipeline
     );
     
     u_decode: decoder port map(
@@ -375,7 +517,8 @@ begin
         in_port_index => decode_in_port_index,
         out_enable => decode_out_enable,
         out_m1 => decode_out_m1,
-        out_imm => decode_out_imm
+        out_imm => decode_out_imm,
+        in_flush_pipeline => decode_in_flush_pipeline
     );
 
     
@@ -384,6 +527,7 @@ begin
         in_pc => in_pc,
         in_pc_reset => in_pc_reset,
         out_pc => pc,
+        out_pc_2 => out_pc_2,
         in_en_pc => en_pc
     );
     
@@ -493,15 +637,136 @@ begin
         out_inst_data => mem_unit_out_inst_data
     );
     
+    console_display : console
+    port map
+    (
+    --
+    -- Stage 1 Fetch
+    --
+        s1_pc => pc,
+        s1_inst => mem_unit_out_inst_data,
+    
+    --
+    -- Stage 2 Decode
+    --
+    
+        s2_pc => x"0000",
+        s2_inst => if_out_instruction,
+    
+        s2_reg_a => decode_read_1_select,
+        s2_reg_b => decode_read_2_select,
+        s2_reg_c => "111",
+    
+        s2_reg_a_data => reg_rd_data1,
+        s2_reg_b_data => reg_rd_data2,
+        s2_reg_c_data => reg_rd_data3,
+        s2_immediate => "00000000" & decode_out_imm,
+    
+    --
+    -- Stage 3 Execute
+    --
+    
+        s3_pc => x"0000",
+        s3_inst => x"0000",
+    
+        s3_reg_a => "000",
+        s3_reg_b => "000",
+        s3_reg_c => "111",
+    
+        s3_reg_a_data => id_out_rd_data_1,
+        s3_reg_b_data => id_out_rd_data_2,
+        s3_reg_c_data => id_out_rd_data_3,
+        s3_immediate => "00000000" & id_out_imm,
+    
+        s3_r_wb => id_out_wb_op,
+        s3_r_wb_data => x"0000",
+    
+        s3_br_wb => '0',
+        s3_br_wb_address => x"0000",
+    
+        s3_mr_wr => '0',
+        s3_mr_wr_address => x"0000",
+        s3_mr_wr_data => x"0000",
+    
+        s3_mr_rd => '0',
+        s3_mr_rd_address => x"0000",
+    
+    --
+    -- Stage 4 Memory
+    --
+    
+        s4_pc => x"0000",
+        s4_inst => x"0000",
+        s4_reg_a => "000",
+        s4_r_wb => mem_unit_out_enable,
+        s4_r_wb_data => mem_unit_out_dest_data,
+    
+    --
+    -- CPU registers
+    --
+    
+        register_0 => x"0000",
+        register_1 => x"0000",
+        register_2 => x"0000",
+        register_3 => x"0000",
+        register_4 => x"0000",
+        register_5 => x"0000",
+        register_6 => x"0000",
+        register_7 => x"0000",
+    
+        register_0_of => '0',
+        register_1_of => '0',
+        register_2_of => '0',
+        register_3_of => '0',
+        register_4_of => '0',
+        register_5_of => '0',
+        register_6_of => '0',
+        register_7_of => '0',
+    
+    --
+    -- CPU Flags
+    --
+        zero_flag => '0',
+        negative_flag => '0',
+        overflow_flag => '0',
+    
+    --
+    -- Debug screen enable
+    --
+        debug => debug_console,
+    
+    --
+    -- Text console display memory access signals ( clk is the processor clock )
+    --
+    
+        clk => in_clk,
+        addr_write => x"0000",
+        data_in => in_port,
+        en_write => '0',
+    
+    --
+    -- Video related signals
+    --
+    
+        board_clock => board_clock,
+        h_sync_signal => h_sync_signal,
+        v_sync_signal => v_sync_signal,
+        vga_red => vga_red,
+        vga_green => vga_green,
+        vga_blue => vga_blue
+    );
+    
     -- Link PC and clk
-    out_pc <= pc;
+    --out_pc <= pc;
     clk <= in_clk;
     reg_rst <= in_reg_reset;
-    mem_unit_in_inst_address <= '0' & pc(15 downto 1);
+    mem_unit_in_inst_address <= '0' & out_pc_2(15 downto 1);
     
     -- Link pipeline flush flag from ALU -> Control path -> IF/ID register
     if_in_flush_pipeline <= alu_flush_pipeline;
     id_in_flush_pipeline <= alu_flush_pipeline;
+    reg_in_flush_pipeline <= alu_flush_pipeline;
+    decode_in_flush_pipeline <= alu_flush_pipeline;
     
     -- Instruction fetch
     if_in_instruction <= mem_unit_out_inst_data;
@@ -523,7 +788,7 @@ begin
     reg_in_index <= decode_in_port_index;
     
     -- Decode 'Outputs'
-    out_port <= reg_out_port;
+    --out_port <= reg_out_port;
     id_in_alu_op <= decode_alu_op;
     id_in_mem_op <= decode_mem_op;
     id_in_wb_op <= decode_wb_op;

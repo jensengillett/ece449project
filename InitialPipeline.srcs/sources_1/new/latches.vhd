@@ -28,7 +28,16 @@ begin
     variable temp_instruction : std_logic_vector(15 downto 0);
     begin
         temp_instruction := if_in_instruction;
-
+        
+        if(rising_edge(clk) and if_enable_latch = '1') then
+            if (if_in_flush_pipeline = '1') then
+                temp_instruction := (others => '0');
+            else 
+                temp_instruction := if_in_instruction;
+            end if; 
+            if_out_instruction <= temp_instruction;
+        end if;
+        
         if(falling_edge(clk) and if_enable_latch = '1') then
             if (if_in_flush_pipeline = '1') then
                 temp_instruction := (others => '0');
@@ -87,6 +96,15 @@ end id_ex_latch;
 architecture Behavioral of id_ex_latch is
 begin
     process(clk) begin
+        if(rising_edge(clk) and id_enable_latch = '1') then
+            if (id_in_flush_pipeline = '1') then
+                id_out_alu_op <= (others => '0');
+                id_out_branch_op <= (others => '0');
+                id_out_mem_op <= (others => '0');
+                id_out_wb_op <= '0';
+            end if;
+        end if;
+        
         if(falling_edge(clk) and id_enable_latch = '1') then
             if (id_in_flush_pipeline = '1') then
             

@@ -1,0 +1,114 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2023.2.1 (win64) Build 4081461 Thu Dec 14 12:24:51 MST 2023
+| Date         : Sun Apr  7 21:07:03 2024
+| Host         : INVESTIGATOR running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file control_path_v3_control_sets_placed.rpt
+| Design       : control_path_v3
+| Device       : xc7a35t
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |    36 |
+|    Minimum number of control sets                        |    36 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |    76 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |    36 |
+| >= 0 to < 4        |     1 |
+| >= 4 to < 6        |     2 |
+| >= 6 to < 8        |     1 |
+| >= 8 to < 10       |     2 |
+| >= 10 to < 12      |     4 |
+| >= 12 to < 14      |     1 |
+| >= 14 to < 16      |     0 |
+| >= 16              |    25 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |             241 |           95 |
+| No           | No                    | Yes                    |               0 |            0 |
+| No           | Yes                   | No                     |             131 |           52 |
+| Yes          | No                    | No                     |             142 |           45 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |             154 |           54 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++--------------------------------------+-----------------------------------------------------------------------------------------------------------------------+--------------------------------------------+------------------+----------------+--------------+
+|             Clock Signal             |                                                     Enable Signal                                                     |              Set/Reset Signal              | Slice Load Count | Bel Load Count | Bels / Slice |
++--------------------------------------+-----------------------------------------------------------------------------------------------------------------------+--------------------------------------------+------------------+----------------+--------------+
+|  board_clock_IBUF_BUFG               |                                                                                                                       |                                            |                1 |              2 |         2.00 |
+|  in_clk_IBUF_BUFG                    |                                                                                                                       | u_id_ex/id_out_branch_op_reg[0]_0          |                2 |              4 |         2.00 |
+|  in_clk_IBUF_BUFG                    | u_pc/address0                                                                                                         |                                            |                2 |              4 |         2.00 |
+| ~console_display/timing/h_sync_reg_0 | console_display/timing/v_line_int_reg[6]_0                                                                            | console_display/timing/v_line_int_reg[6]_1 |                3 |              7 |         2.33 |
+|  in_clk_IBUF_BUFG                    |                                                                                                                       | u_pc/address0                              |                8 |              8 |         1.00 |
+|  in_clk_IBUF_BUFG                    | u_if_id/if_out_instruction_reg[10]_3[0]                                                                               | u_alu/alu_flush_pipeline                   |                3 |              9 |         3.00 |
+|  in_clk_IBUF_BUFG                    | u_ex_mem/E[0]                                                                                                         |                                            |                3 |             10 |         3.33 |
+|  in_clk_IBUF_BUFG                    | u_pc/current_pc_reg[11]                                                                                               |                                            |                3 |             10 |         3.33 |
+|  video_clock                         | console_display/timing/h_dot0                                                                                         | console_display/timing/v_line_int          |                4 |             10 |         2.50 |
+|  video_clock                         |                                                                                                                       | console_display/timing/h_dot0              |                4 |             11 |         2.75 |
+|  video_clock                         | console_display/timing/h_dot_int_reg[1]_0                                                                             |                                            |                4 |             13 |         3.25 |
+|  in_clk_IBUF_BUFG                    | u_decode/in_port_index_reg[1]_3[0]                                                                                    | in_reg_reset_IBUF                          |                9 |             16 |         1.78 |
+|  in_clk_IBUF_BUFG                    | u_decode/in_port_index_reg[1]_1[0]                                                                                    | in_reg_reset_IBUF                          |                2 |             16 |         8.00 |
+|  in_clk_IBUF_BUFG                    | u_decode/in_port_index_reg[1]_2[0]                                                                                    | in_reg_reset_IBUF                          |               10 |             16 |         1.60 |
+|  in_clk_IBUF_BUFG                    | u_decode/in_port_index_reg[1]_4[0]                                                                                    | in_reg_reset_IBUF                          |                2 |             16 |         8.00 |
+|  in_clk_IBUF_BUFG                    | u_decode/in_port_index_reg[2]_1[0]                                                                                    | in_reg_reset_IBUF                          |                5 |             16 |         3.20 |
+|  in_clk_IBUF_BUFG                    | u_id_ex/id_out_branch_op_reg[5]_0                                                                                     |                                            |                5 |             16 |         3.20 |
+| ~in_clk_IBUF_BUFG                    |                                                                                                                       | u_pc/current_pc_reg[1]_0                   |                4 |             16 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_decode/in_port_index_reg[2]_0[0]                                                                                    | in_reg_reset_IBUF                          |                8 |             16 |         2.00 |
+|  in_clk_IBUF_BUFG                    | u_decode/E[0]                                                                                                         | in_reg_reset_IBUF                          |                6 |             16 |         2.67 |
+|  in_clk_IBUF_BUFG                    | u_decode/in_port_index_reg[1]_0[0]                                                                                    | in_reg_reset_IBUF                          |                2 |             16 |         8.00 |
+| ~in_clk_IBUF_BUFG                    |                                                                                                                       | u_alu/alu_flush_pipeline                   |               12 |             28 |         2.33 |
+|  in_clk_IBUF_BUFG                    |                                                                                                                       | u_alu/alu_flush_pipeline                   |               12 |             30 |         2.50 |
+|  in_clk_IBUF_BUFG                    |                                                                                                                       | u_ex_mem/ex_out_mem_op_reg[2]_0[0]         |               10 |             34 |         3.40 |
+|  video_clock                         |                                                                                                                       |                                            |               24 |             47 |         1.96 |
+|  in_clk_IBUF_BUFG                    |                                                                                                                       |                                            |               21 |             58 |         2.76 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_256_383_0_0_i_1_n_0  |                                            |               16 |             64 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_384_511_0_0_i_1_n_0  |                                            |               16 |             64 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_512_639_0_0_i_1_n_0  |                                            |               16 |             64 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_640_767_0_0_i_1_n_0  |                                            |               16 |             64 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_896_1023_0_0_i_1_n_0 |                                            |               16 |             64 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_0_127_0_0_i_1_n_0    |                                            |               16 |             64 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_128_255_0_0_i_1_n_0  |                                            |               16 |             64 |         4.00 |
+|  in_clk_IBUF_BUFG                    | u_mem_unit/u_ram/xpm_memory_dpdistram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_768_895_0_0_i_1_n_0  |                                            |               16 |             64 |         4.00 |
+| ~in_clk_IBUF_BUFG                    | u_alu/E[0]                                                                                                            |                                            |               28 |             89 |         3.18 |
+| ~in_clk_IBUF_BUFG                    |                                                                                                                       |                                            |               49 |            134 |         2.73 |
++--------------------------------------+-----------------------------------------------------------------------------------------------------------------------+--------------------------------------------+------------------+----------------+--------------+
+
+

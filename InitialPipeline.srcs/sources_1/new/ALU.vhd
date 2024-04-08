@@ -42,8 +42,8 @@ begin
     variable result_32 : signed(31 DOWNTO 0) := (others => '0');  -- Used for MUL results
     variable temp_a, temp_b : signed(15 DOWNTO 0) := (others => '0');  -- Used for MUL operands
     begin -- Begin process
-        flush_pipeline <= '0';
         if(rising_edge(clk) and alu_enable = '1') then  -- On each clock tick
+            flush_pipeline <= '0';
             result <= (others => '0'); -- reset result signal
             result_enable <= '0';  -- reset result enable signal
             

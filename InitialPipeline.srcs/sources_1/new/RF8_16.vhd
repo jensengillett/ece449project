@@ -24,7 +24,8 @@ entity register_file is
         out_port: out std_logic_vector(15 downto 0);
         in_index: in std_logic_vector(2 downto 0);
         in_port_enable: in std_logic;
-        in_port: in std_logic_vector(15 downto 0)
+        in_port: in std_logic_vector(15 downto 0);
+        in_flush_pipeline: in std_logic
     );
 end register_file;
 
@@ -72,7 +73,7 @@ begin
     
     -- Output port
     process(clk) begin
-        if(out_enable = '1' and reg_enable = '1') then
+        if(out_enable = '1' and reg_enable = '1' and in_flush_pipeline /= '1') then
             case rd_index1(2 downto 0) is
                 when "000" => out_port <= reg_file(0);
                 when "001" => out_port <= reg_file(1);
