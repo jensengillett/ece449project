@@ -56,7 +56,7 @@ begin
                 reg_rst <= '0';
             when X"0A32" =>
                 in_port_enable <= '1';
-                in_port <= X"0008";
+                in_port <= X"0003";
             when X"0A34" =>
                 in_port <= X"0000";
                 in_port_enable <= '0';

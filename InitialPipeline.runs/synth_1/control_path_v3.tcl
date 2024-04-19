@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/School/ece449/InitialPipeline/InitialPipeline.runs/synth_1/control_path_v3.tcl"
+  variable script "C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.runs/synth_1/control_path_v3.tcl"
   variable category "vivado_synth"
 }
 
@@ -70,52 +70,50 @@ proc create_report { reportName command } {
   }
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
-set_param chipscope.maxJobs 2
-set_param xicom.use_bs_reader 1
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a35tcpg236-1
 
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
-set_property webtalk.parent_dir C:/School/ece449/InitialPipeline/InitialPipeline.cache/wt [current_project]
-set_property parent.project_path C:/School/ece449/InitialPipeline/InitialPipeline.xpr [current_project]
+set_property webtalk.parent_dir C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.cache/wt [current_project]
+set_property parent.project_path C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.xpr [current_project]
 set_property XPM_LIBRARIES XPM_MEMORY [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
-set_property ip_output_repo c:/School/ece449/InitialPipeline/InitialPipeline.cache/ip [current_project]
+set_property ip_output_repo c:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_mem {
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formata.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatb_testing.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatb_3.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatb_2.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatb_1.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatl_2.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatl_3.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/test1.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/test2.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatl_1.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatl_1_nops.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/jumptoram.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatl_2_nops.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatb_1_nops.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/formatb_2_nops.mem
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/test1_nops.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formata.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_testing.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_3.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_2.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_1.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatl_2.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatl_3.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/test1.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/test2.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatl_1.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatl_1_nops.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/jumptoram.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatl_2_nops.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_1_nops.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/formatb_2_nops.mem
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/test1_nops.mem
 }
 read_vhdl -library xil_defaultlib {
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/console_v1_02.vhd
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/decoder.vhd
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/latches.vhd
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/memory.vhd
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/pc_unit.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/console_v1_02.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/decoder.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/latches.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/memory.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/pc_unit.vhd
 }
 read_vhdl -vhdl2008 -library xil_defaultlib {
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/ALU.vhd
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/RF8_16.vhd
-  C:/School/ece449/InitialPipeline/InitialPipeline.srcs/sources_1/new/control_path_v3.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/ALU.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/RF8_16.vhd
+  C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/sources_1/new/control_path_v3.vhd
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -126,12 +124,12 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc C:/School/ece449/InitialPipeline/InitialPipeline.srcs/constrs_1/new/basys3.xdc
-set_property used_in_implementation false [get_files C:/School/ece449/InitialPipeline/InitialPipeline.srcs/constrs_1/new/basys3.xdc]
+read_xdc C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/constrs_1/new/basys3.xdc
+set_property used_in_implementation false [get_files C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/constrs_1/new/basys3.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
 
-read_checkpoint -auto_incremental -incremental C:/School/ece449/InitialPipeline/InitialPipeline.srcs/utils_1/imports/synth_1/control_path_v3.dcp
+read_checkpoint -auto_incremental -incremental C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/utils_1/imports/synth_1/control_path_v3.dcp
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }

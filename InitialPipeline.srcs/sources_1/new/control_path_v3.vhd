@@ -5,22 +5,22 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity control_path_v3 is
     Port ( 
-        --out_pc : out std_logic_vector(15 downto 0);
-        --out_port: out std_logic_vector(15 downto 0);
+        out_pc : out std_logic_vector(15 downto 0);
+        out_port: out std_logic_vector(15 downto 0);
         in_port: in std_logic_vector(15 downto 0);
         in_port_enable: in std_logic;
         in_clk: in std_logic;
-        in_reg_reset: in std_logic;
+        in_reg_reset: in std_logic
         -- Used for debug console output; commented out for sim
-        debug_console : in STD_LOGIC;
-        board_clock: in std_logic;
-        
-        vga_red : out std_logic_vector( 3 downto 0 );
-        vga_green : out std_logic_vector( 3 downto 0 );
-        vga_blue : out std_logic_vector( 3 downto 0 );
-        
-        h_sync_signal : out std_logic;
-        v_sync_signal : out std_logic
+        --debug_console : in STD_LOGIC;
+        --board_clock: in std_logic;
+        --
+        --vga_red : out std_logic_vector( 3 downto 0 );
+        --vga_green : out std_logic_vector( 3 downto 0 );
+        --vga_blue : out std_logic_vector( 3 downto 0 );
+        --
+        --h_sync_signal : out std_logic;
+        --v_sync_signal : out std_logic
     );
 end control_path_v3;
 
@@ -638,127 +638,127 @@ begin
         out_inst_data => mem_unit_out_inst_data
     );
     
-    console_display : console
-    port map
-    (
-    --
-    -- Stage 1 Fetch
-    --
-        s1_pc => pc,
-        s1_inst => mem_unit_out_inst_data,
+--    console_display : console
+--    port map
+--    (
+--    --
+--    -- Stage 1 Fetch
+--    --
+--        s1_pc => pc,
+--        s1_inst => mem_unit_out_inst_data,
     
-    --
-    -- Stage 2 Decode
-    --
+--    --
+--    -- Stage 2 Decode
+--    --
     
-        s2_pc => x"0000",
-        s2_inst => if_out_instruction,
+--        s2_pc => x"0000",
+--        s2_inst => if_out_instruction,
     
-        s2_reg_a => decode_read_1_select,
-        s2_reg_b => decode_read_2_select,
-        s2_reg_c => "111",
+--        s2_reg_a => decode_read_1_select,
+--        s2_reg_b => decode_read_2_select,
+--        s2_reg_c => "111",
     
-        s2_reg_a_data => reg_rd_data1,
-        s2_reg_b_data => reg_rd_data2,
-        s2_reg_c_data => reg_rd_data3,
-        s2_immediate => "00000000" & decode_out_imm,
+--        s2_reg_a_data => reg_rd_data1,
+--        s2_reg_b_data => reg_rd_data2,
+--        s2_reg_c_data => reg_rd_data3,
+--        s2_immediate => "00000000" & decode_out_imm,
     
-    --
-    -- Stage 3 Execute
-    --
+--    --
+--    -- Stage 3 Execute
+--    --
     
-        s3_pc => x"0000",
-        s3_inst => x"0000",
+--        s3_pc => x"0000",
+--        s3_inst => x"0000",
     
-        s3_reg_a => "000",
-        s3_reg_b => "000",
-        s3_reg_c => "111",
+--        s3_reg_a => "000",
+--        s3_reg_b => "000",
+--        s3_reg_c => "111",
     
-        s3_reg_a_data => id_out_rd_data_1,
-        s3_reg_b_data => id_out_rd_data_2,
-        s3_reg_c_data => id_out_rd_data_3,
-        s3_immediate => "00000000" & id_out_imm,
+--        s3_reg_a_data => id_out_rd_data_1,
+--        s3_reg_b_data => id_out_rd_data_2,
+--        s3_reg_c_data => id_out_rd_data_3,
+--        s3_immediate => "00000000" & id_out_imm,
     
-        s3_r_wb => id_out_wb_op,
-        s3_r_wb_data => x"0000",
+--        s3_r_wb => id_out_wb_op,
+--        s3_r_wb_data => x"0000",
     
-        s3_br_wb => '0',
-        s3_br_wb_address => x"0000",
+--        s3_br_wb => '0',
+--        s3_br_wb_address => x"0000",
     
-        s3_mr_wr => '0',
-        s3_mr_wr_address => x"0000",
-        s3_mr_wr_data => x"0000",
+--        s3_mr_wr => '0',
+--        s3_mr_wr_address => x"0000",
+--        s3_mr_wr_data => x"0000",
     
-        s3_mr_rd => '0',
-        s3_mr_rd_address => x"0000",
+--        s3_mr_rd => '0',
+--        s3_mr_rd_address => x"0000",
     
-    --
-    -- Stage 4 Memory
-    --
+--    --
+--    -- Stage 4 Memory
+--    --
     
-        s4_pc => x"0000",
-        s4_inst => x"0000",
-        s4_reg_a => "000",
-        s4_r_wb => mem_unit_out_enable,
-        s4_r_wb_data => mem_unit_out_dest_data,
+--        s4_pc => x"0000",
+--        s4_inst => x"0000",
+--        s4_reg_a => "000",
+--        s4_r_wb => mem_unit_out_enable,
+--        s4_r_wb_data => mem_unit_out_dest_data,
     
-    --
-    -- CPU registers
-    --
+--    --
+--    -- CPU registers
+--    --
     
-        register_0 => x"0000",
-        register_1 => x"0000",
-        register_2 => x"0000",
-        register_3 => x"0000",
-        register_4 => x"0000",
-        register_5 => x"0000",
-        register_6 => x"0000",
-        register_7 => x"0000",
+--        register_0 => x"0000",
+--        register_1 => x"0000",
+--        register_2 => x"0000",
+--        register_3 => x"0000",
+--        register_4 => x"0000",
+--        register_5 => x"0000",
+--        register_6 => x"0000",
+--        register_7 => x"0000",
     
-        register_0_of => '0',
-        register_1_of => '0',
-        register_2_of => '0',
-        register_3_of => '0',
-        register_4_of => '0',
-        register_5_of => '0',
-        register_6_of => '0',
-        register_7_of => '0',
+--        register_0_of => '0',
+--        register_1_of => '0',
+--        register_2_of => '0',
+--        register_3_of => '0',
+--        register_4_of => '0',
+--        register_5_of => '0',
+--        register_6_of => '0',
+--        register_7_of => '0',
     
-    --
-    -- CPU Flags
-    --
-        zero_flag => '0',
-        negative_flag => '0',
-        overflow_flag => '0',
+--    --
+--    -- CPU Flags
+--    --
+--        zero_flag => '0',
+--        negative_flag => '0',
+--        overflow_flag => '0',
     
-    --
-    -- Debug screen enable
-    --
-        debug => debug_console,
+--    --
+--    -- Debug screen enable
+--    --
+--        debug => debug_console,
     
-    --
-    -- Text console display memory access signals ( clk is the processor clock )
-    --
+--    --
+--    -- Text console display memory access signals ( clk is the processor clock )
+--    --
     
-        clk => in_clk,
-        addr_write => x"0000",
-        data_in => in_port,
-        en_write => '0',
+--        clk => in_clk,
+--        addr_write => x"0000",
+--        data_in => in_port,
+--        en_write => '0',
     
-    --
-    -- Video related signals
-    --
+--    --
+--    -- Video related signals
+--    --
     
-        board_clock => board_clock,
-        h_sync_signal => h_sync_signal,
-        v_sync_signal => v_sync_signal,
-        vga_red => vga_red,
-        vga_green => vga_green,
-        vga_blue => vga_blue
-    );
+--        board_clock => board_clock,
+--        h_sync_signal => h_sync_signal,
+--        v_sync_signal => v_sync_signal,
+--        vga_red => vga_red,
+--        vga_green => vga_green,
+--        vga_blue => vga_blue
+--    );
     
     -- Link PC and clk
-    --out_pc <= pc;
+    out_pc <= pc;
     clk <= in_clk;
     reg_rst <= in_reg_reset;
     mem_unit_in_inst_address <= '0' & out_pc_2(15 downto 1);

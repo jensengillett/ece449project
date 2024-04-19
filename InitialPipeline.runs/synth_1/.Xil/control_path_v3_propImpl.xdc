@@ -1,5 +1,5 @@
-set_property SRC_FILE_INFO {cfile:C:/School/ece449/InitialPipeline/InitialPipeline.srcs/constrs_1/new/basys3.xdc rfile:../../../InitialPipeline.srcs/constrs_1/new/basys3.xdc id:1} [current_design]
-set_property SRC_FILE_INFO {cfile:C:/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl rfile:../../../../../../Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl id:2 order:LATE scoped_inst:u_mem_unit/u_ram/xpm_memory_dpdistram_inst unmanaged:yes} [current_design]
+set_property SRC_FILE_INFO {cfile:C:/Xilinx/Vivado_Projects/ece449project/InitialPipeline.srcs/constrs_1/new/basys3.xdc rfile:../../../InitialPipeline.srcs/constrs_1/new/basys3.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:C:/Xilinx/Vivado/2023.2/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl rfile:../../../../../Vivado/2023.2/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl id:2 order:LATE scoped_inst:u_mem_unit/u_ram/xpm_memory_dpdistram_inst unmanaged:yes} [current_design]
 set_property src_info {type:XDC file:1 line:7 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN W5 [get_ports board_clock]
 set_property src_info {type:XDC file:1 line:14 export:INPUT save:INPUT read:READ} [current_design]

@@ -140,7 +140,7 @@ begin
        ADDR_WIDTH_B => 16,               -- DECIMAL
        BYTE_WRITE_WIDTH_A => 16,        -- DECIMAL
        CLOCKING_MODE => "common_clock", -- String
-       MEMORY_INIT_FILE => "formatl_2_nops.mem",      -- String
+       MEMORY_INIT_FILE => "test1_nops.mem",      -- String
        MEMORY_INIT_PARAM => "",        -- String
        MEMORY_OPTIMIZATION => "true",   -- String
        MEMORY_SIZE => 16384,             -- DECIMAL
