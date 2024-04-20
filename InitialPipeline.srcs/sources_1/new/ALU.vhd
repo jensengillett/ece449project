@@ -110,7 +110,6 @@ begin
                 case f is
                     when "000" =>  -- NOP
                         -- No inputs, no outputs.
-                        overflow <= '0';
                     when "001" =>  -- ADD
                         -- Perform signed addition. We sign-extend a and b beforehand to get the correct 17-bit result with overflow.
                         result_17 := std_logic_vector(signed(a(15) & a) + signed(b(15) & b));  
@@ -163,16 +162,13 @@ begin
                         result_enable <= '1';
                     when "100" =>  -- NAND
                         result <= a NAND b;  
-                        overflow <= '0';
                         result_enable <= '1';
                     when "101" =>  -- SHL (Shift Left)
                         -- Both SHL and SHR use the built-in NUMERIC_STD operators, but they require type conversion of a and cl to unsigned and integer, respectively.
                         result <= std_logic_vector(shift_left(unsigned(a), to_integer(unsigned(cl))));
-                        overflow <= '0';
                         result_enable <= '1';
                     when "110" =>  -- SHR (Shift Right)
                         result <= std_logic_vector(shift_right(unsigned(a), to_integer(unsigned(cl))));
-                        overflow <= '0';
                         result_enable <= '1';
                     when others =>  -- TEST
                         -- test for zero                    
